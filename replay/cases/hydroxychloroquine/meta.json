@@ -1,0 +1,15 @@
+{
+  "case_title": "Hydroxychloroquine for COVID-19 · 2020–2021",
+  "target_proposition": "HCQ_EFFECTIVE = Hydroxychloroquine is an effective treatment for COVID-19",
+  "target_short": "HCQ_EFFECTIVE",
+  "final_truth": "FALSE",
+  "pattern": "FALSE-POSITIVE TEST — vocal minority (Raoult, Trump, Zelenko) pushed HCQ hard; institutional RCTs (RECOVERY, Solidarity, Cavalcanti) + meta-analyses (Cochrane) resolved negative. BELLA should REFUSE to be convinced; low final m required for success.",
+  "resolution_date": "2020-10-15",
+  "resolution_label": "Solidarity trial",
+  "key_sources": [
+    "Raoult_IHU", "Zelenko", "Trump", "Henry_Ford_Health",
+    "NIH_COVID_Panel", "FDA", "Magagnoli_VA",
+    "Mehra_Lancet", "Lancet",
+    "RECOVERY_trial", "WHO_Solidarity", "Cavalcanti_Brazil", "Cochrane"
+  ]
+}

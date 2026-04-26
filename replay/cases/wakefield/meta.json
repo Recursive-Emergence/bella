@@ -1,0 +1,15 @@
+{
+  "case_title": "Wakefield MMR-autism · 1998–2014",
+  "target_proposition": "WF_FRAUD = Wakefield's 1998 MMR-autism paper is fraudulent and the MMR-autism link is false",
+  "target_short": "WF_FRAUD",
+  "final_truth": "TRUE",
+  "pattern": "INVERTED — initial claim (MMR causes autism) gained media traction; minority investigator (Deer) + epidemiological consensus (Madsen, Honda, Smeeth, Taylor) + regulator (GMC) eventually corrected it",
+  "resolution_date": "2010-05-24",
+  "resolution_label": "struck off register",
+  "key_sources": [
+    "Wakefield", "Daily_Mail",
+    "Deer_Sunday_Times", "BMJ_Deer",
+    "Madsen_Denmark", "Honda_Japan", "Smeeth_UK", "Taylor_MetaAnalysis",
+    "Lancet", "Lancet_co_authors", "GMC_UK", "MRC_UK"
+  ]
+}

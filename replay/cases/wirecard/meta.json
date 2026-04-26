@@ -1,0 +1,13 @@
+{
+  "case_title": "Wirecard · 2014–2020",
+  "target_proposition": "WC_FRAUD = Wirecard is engaged in accounting fraud",
+  "target_short": "WC_FRAUD",
+  "final_truth": "TRUE",
+  "pattern": "specialist filter right, institutional consensus wrong",
+  "resolution_date": "2020-06-25",
+  "resolution_label": "collapse",
+  "key_sources": [
+    "FT_McCrum", "FT_Alphaville", "Zatarra",
+    "BaFin", "Wirecard_PR", "KPMG", "EY"
+  ]
+}

@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local caches (kernel/CLI rebuild on first run)
+kernel_cache.json
+cli_cache.json
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Distribution
+build/
+dist/
+*.egg-info/
+
+# Local secrets / env
+.env
+.env.local

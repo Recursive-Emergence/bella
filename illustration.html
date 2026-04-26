@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BELLA — Mechanisms in Action (Warsaw Building Collapse)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font: 14px/1.5 ui-sans-serif, -apple-system, "SF Pro Text", sans-serif;
+    background: #0d1117; color: #e6edf3;
+    padding: 24px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page { max-width: 1600px; margin: 0 auto; }
+
+  h1 {
+    font-size: 22px; font-weight: 500; letter-spacing: -0.015em;
+    margin-bottom: 6px;
+  }
+  .subtitle {
+    font-size: 13px; color: #8b949e;
+    margin-bottom: 4px;
+  }
+  .scenario-head {
+    background: #161b22; border: 1px solid #30363d;
+    border-radius: 12px; padding: 18px 22px;
+    margin-bottom: 20px;
+  }
+  .scenario-head .tag {
+    display: inline-block;
+    font-size: 10px; padding: 3px 8px; border-radius: 10px;
+    background: #1f2937; color: #9ca3af;
+    margin-left: 8px; vertical-align: middle;
+  }
+  .narrative {
+    font-size: 13px; color: #b9c0c8;
+    margin-top: 8px; line-height: 1.55;
+  }
+
+  .board {
+    position: relative;
+    background: #161b22; border: 1px solid #30363d;
+    border-radius: 14px; padding: 28px;
+    overflow: hidden;
+  }
+
+  .lanes {
+    display: grid;
+    grid-template-columns: 260px 1fr 160px;
+    gap: 28px;
+    align-items: start;
+  }
+
+  .lane-header {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em;
+    color: #6e7681; margin-bottom: 10px;
+    padding-bottom: 6px; border-bottom: 1px solid #21262d;
+  }
+
+  /* ─── ACTORS ─── */
+  .actor {
+    display: flex; gap: 10px; padding: 10px 12px;
+    background: #0d1117; border: 1px solid #21262d;
+    border-radius: 10px; margin-bottom: 8px;
+    font-size: 12px;
+    position: relative;
+  }
+  .actor.prominent { border-color: #3b5572; background: #111722; }
+  .actor.bot { border-color: #5a2d2d; background: #1f1214; opacity: 0.78; }
+  .actor .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: #21262d; color: #adbac7;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600;
+    flex-shrink: 0;
+    border: 1px solid #30363d;
+  }
+  .actor.witness .avatar { background: #1a3b2e; color: #6ec28c; border-color: #2e5a4a; }
+  .actor.journalist .avatar { background: #1e2a4a; color: #82a2e3; border-color: #3b5572; }
+  .actor.expert .avatar { background: #3a2960; color: #c39bd3; border-color: #5a4a87; }
+  .actor.official .avatar { background: #4a2a2a; color: #e57373; border-color: #6a4040; }
+  .actor.bot .avatar { background: #2a1518; color: #e57373; border-color: #4a2020; }
+  .actor.citizen .avatar { background: #3b3215; color: #ffd166; border-color: #5a4f2a; }
+  .actor .meta { flex: 1; min-width: 0; }
+  .actor .name { font-weight: 600; color: #e6edf3; line-height: 1.2; }
+  .actor .role { font-size: 11px; color: #8b949e; margin-top: 2px; }
+  .actor .sigma {
+    display: inline-block; margin-top: 4px;
+    font-family: ui-monospace, monospace;
+    font-size: 10px; padding: 1px 6px; border-radius: 8px;
+    background: #21262d; color: #9ca3af;
+  }
+  .actor .sigma.high { background: #1a3b2e; color: #6ec28c; }
+  .actor .sigma.low { background: #2a1518; color: #e57373; }
+
+  /* ─── CLAIMS/PROPS ─── */
+  .claim {
+    background: #0d1117; border: 1px solid #30363d;
+    border-radius: 10px; padding: 12px 14px;
+    margin-bottom: 14px;
+    position: relative;
+  }
+  .claim.contested { border-left: 3px solid #f0ad4e; }
+  .claim.settled  { border-left: 3px solid #62d196; }
+  .claim.debunked { border-left: 3px solid #e57373; }
+  .claim.new      { border-left: 3px solid #6ea8fe; }
+  .claim .cid { font-family: ui-monospace, monospace; font-size: 10px; color: #6e7681; letter-spacing: 0.08em; }
+  .claim .content { font-size: 13px; margin-top: 3px; line-height: 1.4; color: #e6edf3; }
+  .claim .type { font-size: 10px; padding: 2px 7px; border-radius: 8px; background: #21262d; color: #9ca3af; margin-right: 6px; }
+  .claim .row { display: flex; gap: 10px; align-items: center; margin-top: 8px; }
+  .mass-bar-wrap { display: flex; align-items: center; gap: 8px; flex: 1; }
+  .mass-bar { flex: 1; height: 5px; background: #21262d; border-radius: 3px; overflow: hidden; position: relative; }
+  .mass-bar > span {
+    display: block; height: 100%; border-radius: 3px;
+    background: linear-gradient(90deg, #e57373, #f0ad4e, #62d196);
+  }
+  .mass-val { font-family: ui-monospace, monospace; font-size: 11px; color: #e6edf3; font-variant-numeric: tabular-nums; }
+  .voices { font-size: 10px; color: #8b949e; font-family: ui-monospace, monospace; }
+
+  .edges-in {
+    position: absolute; left: -14px; top: 50%; transform: translateY(-50%);
+    font-family: ui-monospace, monospace; font-size: 9px; color: #6e7681;
+    white-space: nowrap;
+  }
+
+  /* edge sub-list beneath claim — shows who contributed & with what act */
+  .edges-block {
+    margin-top: 10px;
+    border-top: 1px dashed #21262d;
+    padding-top: 8px;
+  }
+  .edge {
+    display: grid; grid-template-columns: 1fr auto auto;
+    gap: 8px; align-items: center;
+    font-size: 11px; padding: 3px 0;
+    color: #adbac7;
+  }
+  .edge .src { color: #e6edf3; }
+  .edge .act {
+    font-family: ui-monospace, monospace; font-size: 10px;
+    padding: 1px 6px; border-radius: 7px;
+    background: #21262d; color: #adbac7;
+    min-width: 72px; text-align: center;
+  }
+  .edge .act.assert   { background: #1a3b2e; color: #6ec28c; }
+  .edge .act.report   { background: #1e2a4a; color: #82a2e3; }
+  .edge .act.infer    { background: #3a2960; color: #c39bd3; }
+  .edge .act.challenge{ background: #4a2a2a; color: #e57373; }
+  .edge .act.support  { background: #2d3748; color: #9ca3af; }
+  .edge .act.counter  { background: #2d1b1b; color: #fb7185; }
+  .edge .w { font-family: ui-monospace, monospace; font-size: 10px; color: #6e7681; min-width: 50px; text-align: right; }
+
+  /* ─── ANNOTATIONS ─── */
+  .anno {
+    background: #0d1117;
+    border: 1px solid #30363d; border-left: 3px solid #6ea8fe;
+    border-radius: 8px; padding: 10px 12px;
+    margin-bottom: 10px;
+    font-size: 11px; color: #adbac7; line-height: 1.5;
+  }
+  .anno.attenuate { border-left-color: #f0ad4e; }
+  .anno.invariant { border-left-color: #62d196; }
+  .anno.economy   { border-left-color: #ffd166; }
+  .anno.entangle  { border-left-color: #c39bd3; }
+  .anno.failure   { border-left-color: #e57373; }
+  .anno b { color: #e6edf3; font-weight: 600; }
+  .anno .tag {
+    display: inline-block; font-size: 9px; padding: 1px 6px;
+    background: #21262d; color: #9ca3af; border-radius: 5px;
+    margin-right: 4px; text-transform: uppercase; letter-spacing: 0.08em;
+    font-weight: 600;
+  }
+  .anno code { font-family: ui-monospace, monospace; font-size: 10px; color: #e6edf3; background: #161b22; padding: 1px 4px; border-radius: 3px; }
+
+  /* ─── BOTTOM STRIPS ─── */
+  .strips { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 24px; }
+  .strip {
+    background: #161b22; border: 1px solid #30363d;
+    border-radius: 12px; padding: 18px 22px;
+  }
+  .strip h3 { font-size: 13px; font-weight: 600; margin-bottom: 12px; color: #e6edf3; }
+  .econ-row {
+    display: grid; grid-template-columns: 140px 1fr auto;
+    gap: 10px; align-items: center;
+    padding: 6px 0; border-bottom: 1px solid #21262d;
+    font-size: 12px;
+  }
+  .econ-row:last-child { border-bottom: none; }
+  .econ-row .who { color: #adbac7; }
+  .econ-row .flow { font-family: ui-monospace, monospace; font-size: 11px; color: #6e7681; }
+  .econ-row .amt {
+    font-family: ui-monospace, monospace; font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    min-width: 65px; text-align: right;
+  }
+  .econ-row .amt.in   { color: #62d196; }
+  .econ-row .amt.out  { color: #e57373; }
+  .econ-row .amt.neu  { color: #9ca3af; }
+
+  .bella-row {
+    padding: 10px 0; border-bottom: 1px solid #21262d;
+    font-size: 12px; color: #adbac7;
+  }
+  .bella-row:last-child { border-bottom: none; }
+  .bella-row .label { font-family: ui-monospace, monospace; font-size: 10px; color: #c39bd3; letter-spacing: 0.08em; margin-right: 10px; text-transform: uppercase; }
+
+  .legend {
+    margin-top: 18px;
+    padding: 12px 16px; background: #0d1117;
+    border: 1px solid #21262d; border-radius: 10px;
+    font-size: 11px; color: #8b949e;
+    display: flex; flex-wrap: wrap; gap: 16px;
+  }
+  .legend b { color: #adbac7; }
+
+  .footer {
+    margin-top: 30px; padding-top: 20px;
+    border-top: 1px solid #21262d;
+    font-size: 11px; color: #6e7681; line-height: 1.6;
+  }
+
+  @media (max-width: 1100px) {
+    .lanes { grid-template-columns: 1fr; }
+    .strips { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="scenario-head">
+    <h1>How BELLA Handles a Real Story
+      <span class="tag">Warsaw Building Collapse · 2026-04-22 · 07:43 local</span>
+    </h1>
+    <p class="subtitle">One diagram, one scenario, every mechanism labeled where it fires.</p>
+    <p class="narrative">
+      A twelve-story residential building on Złota Street in Warsaw collapses during morning
+      commute. Nine human actors (witness, journalists, wire service, expert, official,
+      citizen contributor, a bot swarm, and Bella) feed claims into the graph over the next
+      six hours. Four claims compete: <i>"building collapsed"</i> (what), <i>"structural
+      failure caused it"</i> (why, disputed), <i>"gas explosion caused it"</i> (why, bot
+      narrative), and <i>"no prior violations"</i> (official counter). The diagram shows
+      each contribution, how BELLA&rsquo;s calculus weights it, and which mechanism fires at
+      which point.
+    </p>
+  </div>
+
+  <div class="board">
+    <div class="lanes">
+
+      <!-- ─────────── COLUMN 1: ACTORS ─────────── -->
+      <div>
+        <div class="lane-header">Human actors (sources)</div>
+
+        <div class="actor witness prominent">
+          <div class="avatar">AK</div>
+          <div class="meta">
+            <div class="name">Ana Kowalska</div>
+            <div class="role">Nurse, firsthand witness · photographed the collapse</div>
+            <span class="sigma high">σ ≈ 0.94</span>
+          </div>
+        </div>
+
+        <div class="actor journalist prominent">
+          <div class="avatar">PW</div>
+          <div class="meta">
+            <div class="name">Piotr Wójcik</div>
+            <div class="role">TVN24 reporter · arrived 30min after collapse, interviewed survivors</div>
+            <span class="sigma high">σ ≈ 0.81</span>
+          </div>
+        </div>
+
+        <div class="actor journalist">
+          <div class="avatar">R</div>
+          <div class="meta">
+            <div class="name">Reuters wire desk</div>
+            <div class="role">Republished TVN24 within 2h · no independent scene reporter</div>
+            <span class="sigma">σ ≈ 0.38 (generalist wire)</span>
+          </div>
+        </div>
+
+        <div class="actor journalist">
+          <div class="avatar">B</div>
+          <div class="meta">
+            <div class="name">BBC / CNN / ITV</div>
+            <div class="role">Republished from Reuters · no independent verification</div>
+            <span class="sigma">σ ≈ 0.22 (second-hop relay)</span>
+          </div>
+        </div>
+
+        <div class="actor expert prominent">
+          <div class="avatar">JN</div>
+          <div class="meta">
+            <div class="name">Dr. Janusz Nowak</div>
+            <div class="role">Structural engineer · analyzed Ana&rsquo;s photos publicly</div>
+            <span class="sigma high">σ ≈ 0.88 (specialist)</span>
+          </div>
+        </div>
+
+        <div class="actor official">
+          <div class="avatar">AJ</div>
+          <div class="meta">
+            <div class="name">City spokesperson</div>
+            <div class="role">Anna Jakubowska · official statement, no evidence attached</div>
+            <span class="sigma">σ ≈ 0.42 (institutional)</span>
+          </div>
+        </div>
+
+        <div class="actor citizen prominent">
+          <div class="avatar">ML</div>
+          <div class="meta">
+            <div class="name">Marcin Lewandowski</div>
+            <div class="role">Private citizen · staked 1&cent; to share a rebar photo</div>
+            <span class="sigma high">σ ≈ 0.76 (new, specific)</span>
+          </div>
+        </div>
+
+        <div class="actor bot">
+          <div class="avatar">🤖</div>
+          <div class="meta">
+            <div class="name">@bot_swarm (×1,247 accounts)</div>
+            <div class="role">Coordinated flood · &quot;CIA gas explosion&quot; narrative</div>
+            <span class="sigma low">σ → 0 (high fan-out)</span>
+          </div>
+        </div>
+
+        <div class="actor expert">
+          <div class="avatar">🧠</div>
+          <div class="meta">
+            <div class="name">Bella</div>
+            <div class="role">FAST places claims · SLOW detects fragility · DEEP reflects on pattern</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ─────────── COLUMN 2: CLAIMS + EDGES ─────────── -->
+      <div>
+        <div class="lane-header">Claims, edges, and what BELLA does with them</div>
+
+        <!-- C1: Building collapsed -->
+        <div class="claim settled">
+          <span class="type">Event</span>
+          <span class="cid">P_c1  ·  building_collapse_warsaw_2026_04_22</span>
+          <div class="content">
+            A twelve-story residential building on Złota Street, Warsaw,
+            collapsed at approximately 07:43 local time on 2026-04-22.
+          </div>
+          <div class="row">
+            <div class="mass-bar-wrap">
+              <div class="mass-bar"><span style="width: 98%"></span></div>
+              <span class="mass-val">m = 0.98</span>
+            </div>
+            <span class="voices">n_eff = 5.2</span>
+          </div>
+          <div class="edges-block">
+            <div class="edge">
+              <span><b class="src">Ana Kowalska</b> &mdash; saw it, photographed</span>
+              <span class="act assert">ASSERT ×2.0</span>
+              <span class="w">+1.8 lr</span>
+            </div>
+            <div class="edge">
+              <span><b class="src">Piotr Wójcik / TVN24</b> &mdash; own reporter on scene</span>
+              <span class="act assert">ASSERT ×2.0</span>
+              <span class="w">+1.5 lr</span>
+            </div>
+            <div class="edge">
+              <span><b class="src">Reuters</b> &mdash; pure relay of TVN24</span>
+              <span class="act report">REPORT ×1.5</span>
+              <span class="w">+0.38 lr</span>
+            </div>
+            <div class="edge">
+              <span><b class="src">BBC / CNN / ITV</b> &mdash; relay of Reuters (S²)</span>
+              <span class="act report">REPORT ×1.5</span>
+              <span class="w">+0.12 lr</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- C2: Structural failure -->
+        <div class="claim contested">
+          <span class="type">Causal</span>
+          <span class="cid">P_c2  ·  cause: structural_failure</span>
+          <div class="content">
+            The collapse was caused by structural failure (ignored code violations,
+            corroded rebar, no safety retrofits since 1974).
+          </div>
+          <div class="row">
+            <div class="mass-bar-wrap">
+              <div class="mass-bar"><span style="width: 72%"></span></div>
+              <span class="mass-val">m = 0.72</span>
+            </div>
+            <span class="voices">n_eff = 2.4</span>
+          </div>
+          <div class="edges-block">
+            <div class="edge">
+              <span><b class="src">Dr. Nowak</b> &mdash; expert analysis of photos, mechanism described</span>
+              <span class="act infer">INFER ×1.3</span>
+              <span class="w">+0.96 lr</span>
+            </div>
+            <div class="edge">
+              <span><b class="src">Marcin (citizen)</b> &mdash; rebar photo stakes SUPPORTS</span>
+              <span class="act support">SUPPORTS</span>
+              <span class="w">P_c5 ≤ self</span>
+            </div>
+            <div class="edge">
+              <span><b class="src">Piotr / TVN24</b> &mdash; quotes engineer; &quot;sources say&quot; modality</span>
+              <span class="act report">REPORT ×1.5</span>
+              <span class="w">+0.28 lr</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- C3: Gas explosion narrative (bot-driven) -->
+        <div class="claim debunked">
+          <span class="type">Causal</span>
+          <span class="cid">P_c3  ·  cause: gas_explosion (bot narrative)</span>
+          <div class="content">
+            The collapse was caused by a gas explosion, orchestrated / covered up
+            (exact wording varies across coordinated posts).
+          </div>
+          <div class="row">
+            <div class="mass-bar-wrap">
+              <div class="mass-bar"><span style="width: 18%"></span></div>
+              <span class="mass-val">m = 0.18</span>
+            </div>
+            <span class="voices">n_eff = 0.9 (from 1,247 accounts)</span>
+          </div>
+          <div class="edges-block">
+            <div class="edge">
+              <span><b class="src">@bot_swarm</b> &mdash; 1,247 coordinated posts, no firsthand evidence</span>
+              <span class="act report">REPORT ×1.5</span>
+              <span class="w">collapses to 0.9 voices</span>
+            </div>
+            <div class="edge">
+              <span><b class="src">⊥ COUNTERS</b> P_c2</span>
+              <span class="act counter">COUNTERS</span>
+              <span class="w">&minus;0.08 on P_c2</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- C4: No prior violations -->
+        <div class="claim contested">
+          <span class="type">State</span>
+          <span class="cid">P_c4  ·  inspector_clean_history</span>
+          <div class="content">
+            The city building inspector&rsquo;s records show no prior violations
+            for the building; maintenance was up-to-date.
+          </div>
+          <div class="row">
+            <div class="mass-bar-wrap">
+              <div class="mass-bar"><span style="width: 52%"></span></div>
+              <span class="mass-val">m = 0.52</span>
+            </div>
+            <span class="voices">n_eff = 1.2</span>
+          </div>
+          <div class="edges-block">
+            <div class="edge">
+              <span><b class="src">City spokesperson</b> &mdash; statement, no documents attached</span>
+              <span class="act challenge">CHALLENGE ×0.4</span>
+              <span class="w">+0.17 lr on P_c4</span>
+            </div>
+            <div class="edge">
+              <span><b class="src">⊥ COUNTERS</b> P_c2 (structural failure)</span>
+              <span class="act counter">COUNTERS</span>
+              <span class="w">&minus;0.05 on P_c2</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- C5: Rebar photo (stake) -->
+        <div class="claim new">
+          <span class="type">Event/Evidence</span>
+          <span class="cid">P_c5  ·  rebar_exposed_corroded_photo</span>
+          <div class="content">
+            Photograph taken at 11:12 shows exposed, corroded rebar in the
+            basement parking debris of 12 Złota Street.
+          </div>
+          <div class="row">
+            <div class="mass-bar-wrap">
+              <div class="mass-bar"><span style="width: 81%"></span></div>
+              <span class="mass-val">m = 0.81</span>
+            </div>
+            <span class="voices">n_eff = 1.3 (new, primary)</span>
+          </div>
+          <div class="edges-block">
+            <div class="edge">
+              <span><b class="src">Marcin (stakes 3¢ for media)</b> &mdash; primary photo, EXIF-authenticated</span>
+              <span class="act assert">ASSERT ×2.0</span>
+              <span class="w">+1.4 lr</span>
+            </div>
+            <div class="edge">
+              <span><b class="src">Dr. Nowak</b> &mdash; cross-confirmation via INFER</span>
+              <span class="act support">SUPPORTS</span>
+              <span class="w">→ P_c2</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ─────────── COLUMN 3: MECHANISM ANNOTATIONS ─────────── -->
+      <div>
+        <div class="lane-header">Mechanism fires here</div>
+
+        <div class="anno invariant">
+          <span class="tag">§8.1 non-amplify</span><br>
+          <b>Reuters + BBC + CNN + ITV reprints of P_c1</b> cannot push its mass above
+          Ana&rsquo;s ASSERT. <code>mass(b) ≤ mass(a)</code> structurally enforced.
+          The four-outlet cascade adds ~0.50 log-lr total, not 4 × anything.
+        </div>
+
+        <div class="anno attenuate">
+          <span class="tag">§8.2 chain</span><br>
+          <b>Reuters → BBC</b> relay attenuates per hop: <code>S² = 0.7² = 0.49</code>.
+          By the time the local-blog reprint arrives, the contribution to lr is ~0.06.
+          Wire-service cascade dissolves mathematically without special-case detection.
+        </div>
+
+        <div class="anno entangle">
+          <span class="tag">R6 σ-collapse</span><br>
+          <b>@bot_swarm (1,247 accounts)</b> collapse to <code>n_eff &lt; 1</code> because
+          their entity specificity σ → 0 (each posts on hundreds of topics, none firsthand).
+          1,247 voices add up to less evidence than Ana&rsquo;s single ASSERT.
+        </div>
+
+        <div class="anno attenuate">
+          <span class="tag">Four Acts</span><br>
+          <b>City spokesperson CHALLENGE ×0.4</b> against P_c2, but without attached
+          evidence, the weight further caps at ~0.17 lr. Institutional statements without
+          primary documentation cannot outweigh expert INFER + primary photo ASSERT.
+        </div>
+
+        <div class="anno invariant">
+          <span class="tag">prop convergence</span><br>
+          <b>1,247 bot posts → ONE proposition (P_c3).</b> Rewordings of the same claim
+          never enter as parallel evidence: embedding similarity + crystal identity gate
+          collapses them during sense. Flood volume &ne; evidence count.
+        </div>
+
+        <div class="anno economy">
+          <span class="tag">Economy</span><br>
+          <b>Bot operation spent 1,247 &times; 1&cent; = $12.47</b> to post its flood.
+          All of it enters Bella&rsquo;s pool. Marcin staked 3&cent; on the rebar photo.
+          When his photo moves P_c2 upward, he earns a share of the pool including the
+          bots&rsquo; own contribution.
+        </div>
+
+        <div class="anno entangle">
+          <span class="tag">Entanglement</span><br>
+          <b>Ana, Piotr, and Marcin all INVOLVE &quot;12 Złota Street&quot;</b> (entity).
+          Their reputation cross-flows through this shared entity, not through explicit
+          cross-cause edges. Bella sees the cluster form without a coordination layer.
+        </div>
+
+        <div class="anno failure">
+          <span class="tag">Known gap</span><br>
+          If a coordinated operation faked <i>firsthand-seeming</i> ASSERTs from 20 aged,
+          diverse-looking accounts each with high σ, the current framework would weight
+          them as evidence. Detection requires entity verification (Wikidata, C2PA) &mdash;
+          Phase 11.5+. Today this remains an open adversarial surface.
+        </div>
+
+        <div class="anno invariant">
+          <span class="tag">Fragility κ</span><br>
+          <b>P_c2 (structural) has κ = 0.42</b> &mdash; one significant new piece of evidence
+          would shift it a lot. Bella allocates her next SLOW-cycle attention here. P_c1 has
+          κ = 0.03 &mdash; settled, don&rsquo;t re-check. Attention ∝ fragility.
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─────────── STRIPS: ECONOMY + BELLA ─────────── -->
+  <div class="strips">
+
+    <div class="strip">
+      <h3>Economic flows over the first 6 hours</h3>
+      <div class="econ-row">
+        <span class="who">Ana (witness)</span>
+        <span class="flow">stakes 3¢ (media) → pool → earns on P_c1 convergence</span>
+        <span class="amt in">+9.2¢</span>
+      </div>
+      <div class="econ-row">
+        <span class="who">Piotr / TVN24</span>
+        <span class="flow">stakes 2¢ (URL) → pool → earns on ASSERT × confirmation</span>
+        <span class="amt in">+7.8¢</span>
+      </div>
+      <div class="econ-row">
+        <span class="who">Dr. Nowak</span>
+        <span class="flow">stakes 1¢ (text) → earns on INFER-driven mass shift of P_c2</span>
+        <span class="amt in">+14.5¢</span>
+      </div>
+      <div class="econ-row">
+        <span class="who">Marcin (citizen)</span>
+        <span class="flow">stakes 3¢ (media) → photo moves P_c2 from 0.58 → 0.72</span>
+        <span class="amt in">+11.3¢</span>
+      </div>
+      <div class="econ-row">
+        <span class="who">@bot_swarm</span>
+        <span class="flow">1,247 × 1¢ stakes → mass stays at 0.18, nothing moves</span>
+        <span class="amt out">−$12.47</span>
+      </div>
+      <div class="econ-row">
+        <span class="who">City spokesperson</span>
+        <span class="flow">free institutional post → no stake, earns nothing</span>
+        <span class="amt neu">0</span>
+      </div>
+      <div class="econ-row">
+        <span class="who">Bella&rsquo;s pool</span>
+        <span class="flow">receives bot stakes + citizen stakes; pays LLM + rewards</span>
+        <span class="amt in">+$2.14 net</span>
+      </div>
+    </div>
+
+    <div class="strip">
+      <h3>Bella&rsquo;s view of the scene</h3>
+
+      <div class="bella-row">
+        <span class="label">FAST</span>
+        Every claim placed into the graph within ~200ms via ANN + crystal identity gate.
+        No cluster thrashing &mdash; bots&rsquo; rewordings collapse to P_c3 at insert time.
+      </div>
+
+      <div class="bella-row">
+        <span class="label">SLOW</span>
+        5-minute cycle detects κ(P_c2) = 0.42 &mdash; high fragility, evidence thin.
+        Queries her own recent observations, allocates DEEP attention here.
+      </div>
+
+      <div class="bella-row">
+        <span class="label">DEEP</span>
+        Generates a virtual-node question: <i>&quot;Has any prior collapse at this address
+        been recorded?&quot;</i> &mdash; posted as a gap on the cause page. If it gets
+        staked and answered, it feeds back as evidence.
+      </div>
+
+      <div class="bella-row">
+        <span class="label">PAIN</span>
+        <i>contamination:</i> nothing (bots stayed in P_c3, didn&rsquo;t cross-pollute P_c1).<br>
+        <i>orphan:</i> nothing (all claims landed in Złota cause).<br>
+        <i>fragility:</i> P_c2 &mdash; being worked on.
+      </div>
+
+      <div class="bella-row">
+        <span class="label">MASS
+          <br>MIGRATION</span>
+        Over 6h: P_c1 climbed 0.50 → 0.98 (settled). P_c2 climbed 0.51 → 0.72 (leaning,
+        one more primary would settle it). P_c3 stayed at 0.18 (refuted by bot-origin
+        signature). P_c4 crept to 0.52 (needs documentation to move further).
+      </div>
+
+    </div>
+  </div>
+
+  <div class="legend">
+    <span><b>ASSERT</b> ×2.0 (firsthand)</span>
+    <span><b>REPORT</b> ×1.5 (attributed relay)</span>
+    <span><b>INFER</b> ×1.3 (synthesis)</span>
+    <span><b>CHALLENGE</b> ×0.4 (counter without evidence)</span>
+    <span><b>SUPPORTS</b> (mass &le; source)</span>
+    <span><b>⊥ COUNTERS</b> (inverts lr)</span>
+    <span><b>σ</b> = 1 / source_count (specificity)</span>
+    <span><b>κ</b> = posterior sensitivity to new evidence</span>
+  </div>
+
+  <div class="footer">
+    Scenario is fictional; mechanisms are current as of 2026-04-22. Non-amplifying and
+    chain-attenuation invariants are live via Theory v5 §8 message passing. Bot-collapse
+    via σ is live via the reward calculus σ_source. Stake-based economy is live at the
+    signal layer. Empirical source credibility (Theory v5 §7) is designed but bootstrapped
+    at 1.0 &mdash; Phase 11.5. Cryptographic content provenance (C2PA, EXIF-signing) is
+    designed, not yet enforced. This diagram shows what BELLA handles well, and implicitly
+    where an adversary would have to push to defeat it.
+  </div>
+
+</div>
+
+</body>
+</html>

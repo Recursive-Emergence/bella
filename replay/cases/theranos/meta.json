@@ -1,0 +1,14 @@
+{
+  "case_title": "Theranos · 2013–2018",
+  "target_proposition": "TH_FRAUD = Theranos' Edison technology does not work as claimed; the company is defrauding investors and patients",
+  "target_short": "TH_FRAUD",
+  "final_truth": "TRUE",
+  "pattern": "specialist filter (Carreyrou/WSJ) + insider whistleblowers right, Silicon Valley / investor / media consensus wrong",
+  "resolution_date": "2018-09-05",
+  "resolution_label": "dissolution",
+  "key_sources": [
+    "Carreyrou_WSJ", "Shultz", "Fuisz",
+    "Walgreens", "Fortune_Parloff", "Theranos_PR", "Holmes",
+    "FDA", "CMS", "SEC"
+  ]
+}

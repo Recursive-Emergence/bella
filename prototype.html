@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>BELLA Walk — Prototype</title>
+<style>
+  :root {
+    --bg: #0e1015;
+    --bg-elev: #161a22;
+    --bg-elev-2: #1e2330;
+    --border: #242a38;
+    --border-bright: #3a4258;
+    --text: #e4e7ef;
+    --text-dim: #8a93a6;
+    --text-dimmer: #5a6378;
+    --accent: #6ea8fe;
+    --accent-dim: #3d6cb6;
+    --confirm: #62d196;
+    --dispute: #e57373;
+    --gap: #f0ad4e;
+    --stake: #ffd166;
+    --field: #c39bd3;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font: 15px/1.5 ui-sans-serif, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+    background: var(--bg); color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── layout ─── */
+  #app { max-width: 900px; margin: 0 auto; min-height: 100vh; padding: 0 16px; }
+
+  header.topbar {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(14, 16, 21, 0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 0;
+    display: flex; align-items: center; gap: 12px;
+    flex-wrap: wrap;
+  }
+  .escape {
+    background: var(--bg-elev); color: var(--text-dim);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 6px 12px; cursor: pointer; font: inherit;
+    transition: all .15s;
+  }
+  .escape:hover { background: var(--bg-elev-2); color: var(--text); border-color: var(--border-bright); }
+  .escape:disabled { opacity: .35; cursor: default; }
+
+  nav.trail {
+    flex: 1; display: flex; gap: 6px;
+    color: var(--text-dimmer); font-size: 13px;
+    overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+    min-width: 0;
+  }
+  nav.trail .crumb { cursor: pointer; color: var(--text-dim); transition: color .15s; }
+  nav.trail .crumb:hover { color: var(--accent); }
+  nav.trail .sep { color: var(--text-dimmer); }
+  nav.trail .current { color: var(--text); cursor: default; }
+
+  .field-badge {
+    font-size: 12px; padding: 4px 10px; border-radius: 12px;
+    background: rgba(195, 155, 211, 0.08);
+    color: var(--field); border: 1px solid rgba(195, 155, 211, 0.25);
+  }
+
+  /* ─── entry (field list) ─── */
+  .entry-view {
+    padding: 60px 0 24px;
+    text-align: center;
+  }
+  .entry-view h1 {
+    font-size: 28px; font-weight: 500;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .entry-view .tagline {
+    color: var(--text-dim); font-size: 14px;
+    margin-bottom: 40px;
+  }
+  .field-list {
+    display: grid; gap: 10px;
+    margin: 0 auto; max-width: 640px;
+  }
+  .field-card {
+    background: var(--bg-elev); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px 18px; cursor: pointer;
+    text-align: left; transition: all .15s;
+  }
+  .field-card:hover { border-color: var(--accent-dim); background: var(--bg-elev-2); }
+  .field-card h3 { font-size: 15px; font-weight: 500; margin-bottom: 6px; }
+  .field-card .meta {
+    font-size: 12px; color: var(--text-dim);
+    display: flex; gap: 12px; flex-wrap: wrap;
+  }
+  .field-card .state-tag {
+    font-size: 11px; padding: 2px 8px; border-radius: 10px;
+    background: rgba(110, 168, 254, 0.1); color: var(--accent);
+  }
+  .field-card .state-tag.contested { background: rgba(229, 115, 115, 0.1); color: var(--dispute); }
+  .field-card .state-tag.reversed { background: rgba(240, 173, 78, 0.1); color: var(--gap); }
+  .field-card .state-tag.converged { background: rgba(98, 209, 150, 0.1); color: var(--confirm); }
+
+  /* ─── walk view ─── */
+  .walk-view { padding: 12px 0 80px; }
+
+  .sibling-group {
+    display: flex; flex-direction: column; gap: 4px;
+    margin: 14px 0;
+  }
+  .sibling-group.above .group-label { margin-bottom: 6px; }
+  .sibling-group.below .group-label { margin-bottom: 6px; }
+  .group-label {
+    font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--text-dimmer);
+    padding: 0 4px;
+  }
+
+  .sibling {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; background: var(--bg-elev);
+    border: 1px solid var(--border); border-radius: 8px;
+    cursor: pointer; transition: all .15s;
+  }
+  .sibling:hover {
+    background: var(--bg-elev-2); border-color: var(--border-bright);
+    transform: translateX(2px);
+  }
+  .sibling.dispute { border-left: 2px solid var(--dispute); }
+  .sibling-text {
+    flex: 1; min-width: 0;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    font-size: 14px;
+  }
+  .sibling-meta {
+    display: flex; align-items: center; gap: 8px;
+    flex-shrink: 0;
+  }
+
+  /* ─── focus node ─── */
+  .focus {
+    background: var(--bg-elev); border: 1px solid var(--border-bright);
+    border-left: 3px solid var(--accent);
+    border-radius: 12px; padding: 20px 22px;
+    margin: 22px 0;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+  }
+  .focus.dispute { border-left-color: var(--dispute); }
+  .focus h2 {
+    font-size: 20px; line-height: 1.35; font-weight: 500;
+    margin-bottom: 10px; letter-spacing: -0.01em;
+  }
+
+  .focus-metrics {
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    margin-bottom: 14px;
+    font-size: 12px; color: var(--text-dim);
+  }
+  .mass-bar {
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .mass-bar-fill {
+    width: 80px; height: 6px; border-radius: 3px;
+    background: var(--bg-elev-2); overflow: hidden;
+    position: relative;
+  }
+  .mass-bar-fill::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+    width: var(--mass, 50%);
+    background: linear-gradient(90deg, var(--dispute), var(--gap), var(--confirm));
+    border-radius: 3px;
+    transition: width .3s ease;
+  }
+  .voices-badge, .time-badge, .stake-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .stake-badge { color: var(--stake); }
+
+  .gap-markers {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin: 12px 0;
+  }
+  .gap-marker {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; padding: 4px 10px;
+    background: rgba(240, 173, 78, 0.08);
+    color: var(--gap);
+    border: 1px solid rgba(240, 173, 78, 0.25);
+    border-radius: 12px; cursor: pointer;
+    transition: all .15s;
+  }
+  .gap-marker:hover {
+    background: rgba(240, 173, 78, 0.15);
+    border-color: var(--gap);
+  }
+
+  .focus-content {
+    color: var(--text); line-height: 1.6;
+    font-size: 14px;
+    margin: 14px 0 18px;
+    padding: 14px 16px;
+    background: var(--bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+
+  .entities-row {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin: 10px 0;
+  }
+  .entity-chip {
+    font-size: 11px; padding: 3px 10px; border-radius: 10px;
+    background: rgba(110, 168, 254, 0.08); color: var(--accent);
+    border: 1px solid rgba(110, 168, 254, 0.2);
+    cursor: pointer; transition: all .15s;
+  }
+  .entity-chip:hover { background: rgba(110, 168, 254, 0.15); border-color: var(--accent); }
+  .entity-chip .rep {
+    font-size: 10px; margin-left: 4px; opacity: 0.7;
+  }
+
+  .children-header {
+    font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--text-dimmer);
+    margin: 16px 0 8px;
+  }
+  .children {
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .child {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; background: var(--bg);
+    border: 1px solid var(--border); border-radius: 8px;
+    cursor: pointer; transition: all .15s;
+  }
+  .child:hover { border-color: var(--accent); background: var(--bg-elev-2); transform: translateX(2px); }
+  .child.dispute { border-left: 2px solid var(--dispute); }
+  .child-text { flex: 1; min-width: 0; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .child-children-count {
+    font-size: 11px; color: var(--text-dimmer);
+    padding: 2px 6px; border-radius: 10px; background: var(--bg-elev-2);
+  }
+  .child-gap-hint {
+    font-size: 10px; color: var(--gap); padding: 2px 6px;
+    background: rgba(240, 173, 78, 0.08);
+    border-radius: 10px;
+  }
+
+  .gap-child {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; background: transparent;
+    border: 1px dashed var(--gap); border-radius: 8px;
+    cursor: pointer; transition: all .15s;
+    color: var(--gap);
+    font-size: 14px;
+  }
+  .gap-child:hover { background: rgba(240, 173, 78, 0.08); }
+  .gap-child .gap-question { flex: 1; }
+  .gap-child .gap-stake { font-size: 11px; color: var(--stake); }
+
+  /* ─── modal ─── */
+  .modal-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+    display: none; align-items: center; justify-content: center;
+    z-index: 100; padding: 16px;
+  }
+  .modal-backdrop.open { display: flex; }
+  .modal {
+    background: var(--bg-elev); border: 1px solid var(--border-bright);
+    border-radius: 14px; padding: 24px;
+    max-width: 520px; width: 100%;
+  }
+  .modal h3 { font-size: 16px; margin-bottom: 8px; color: var(--gap); }
+  .modal p { color: var(--text-dim); font-size: 13px; margin-bottom: 16px; }
+  .modal textarea {
+    width: 100%; min-height: 90px; padding: 10px;
+    background: var(--bg); color: var(--text);
+    border: 1px solid var(--border); border-radius: 8px;
+    font: inherit; resize: vertical;
+  }
+  .modal-actions {
+    display: flex; gap: 10px; margin-top: 14px; justify-content: flex-end;
+  }
+  .btn {
+    padding: 8px 16px; border-radius: 8px; font: inherit;
+    cursor: pointer; border: 1px solid var(--border);
+    background: var(--bg); color: var(--text); transition: all .15s;
+  }
+  .btn:hover { background: var(--bg-elev-2); }
+  .btn-primary { background: var(--accent-dim); border-color: var(--accent); color: white; }
+  .btn-primary:hover { background: var(--accent); }
+  .stake-control {
+    display: flex; align-items: center; gap: 10px;
+    margin: 12px 0;
+    font-size: 13px; color: var(--text-dim);
+  }
+  .stake-control input {
+    width: 70px; padding: 6px 10px;
+    background: var(--bg); color: var(--text);
+    border: 1px solid var(--border); border-radius: 6px;
+    font: inherit;
+  }
+
+  /* ─── responsive ─── */
+  @media (max-width: 640px) {
+    #app { padding: 0 12px; }
+    header.topbar { padding: 10px 0; gap: 8px; }
+    .field-badge { font-size: 11px; padding: 3px 8px; }
+    .focus { padding: 16px 16px; margin: 16px 0; }
+    .focus h2 { font-size: 17px; }
+    .focus-content { font-size: 13px; padding: 12px; }
+    .entry-view h1 { font-size: 22px; }
+    nav.trail { font-size: 12px; }
+  }
+
+  /* ─── transitions ─── */
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .walk-view > * { animation: slideIn .3s ease-out; }
+  .focus { animation: slideIn .35s ease-out; }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <header class="topbar" id="topbar">
+    <button class="escape" id="escapeBtn" title="Escape to field entry">← Escape</button>
+    <nav class="trail" id="trail"></nav>
+    <div class="field-badge" id="fieldBadge"></div>
+  </header>
+
+  <div class="entry-view" id="entryView">
+    <h1>BELLA Walk</h1>
+    <p class="tagline">Enter a field. Walk the belief graph. Fill the gaps.</p>
+    <div class="field-list" id="fieldList"></div>
+  </div>
+
+  <main class="walk-view hidden" id="walkView"></main>
+</div>
+
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <h3 id="modalTitle">Contribute evidence</h3>
+    <p id="modalBody">Tell us what you know. Your claim enters the belief tree as a voice — attenuated by your reputation, weighted by evidence quality.</p>
+    <textarea id="modalText" placeholder="Your claim (e.g., 'the experiment was reproduced in 2005 with n=340 patients')"></textarea>
+    <div class="stake-control">
+      <label>Stake: </label>
+      <input type="number" id="stakeInput" value="0.05" step="0.01" min="0">¢
+      <span style="color: var(--text-dimmer); font-size: 11px;">(you earn a share if your claim moves the mass)</span>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" id="modalCancel">Cancel</button>
+      <button class="btn btn-primary" id="modalSubmit">Submit claim</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// MOCK DATA — handcrafted belief graph
+// ═══════════════════════════════════════════════════════════════
+
+const FIELDS = [
+  {
+    id: 'f_hpylori', label: 'H. pylori causes peptic ulcers',
+    rootId: 'hp_root', state: 'converged', size: 14,
+    description: 'The 25-year medical consensus reversal. Nobel 2005.',
+  },
+  {
+    id: 'f_dinos', label: 'What killed the dinosaurs',
+    rootId: 'dino_root', state: 'contested', size: 12,
+    description: 'Three competing hypotheses, 45 years unresolved.',
+  },
+  {
+    id: 'f_iran', label: 'US-Iran military conflict',
+    rootId: 'iran_root', state: 'active', size: 15,
+    description: 'Active situation. Evidence arriving daily.',
+  },
+  {
+    id: 'f_drift', label: 'Continental drift (Wegener)',
+    rootId: 'drift_root', state: 'reversed', size: 10,
+    description: 'Confident wrongness slowly reversed over 63 years.',
+  },
+  {
+    id: 'f_epstein', label: 'Epstein case files',
+    rootId: 'eps_root', state: 'contested', size: 11,
+    description: 'Competing narratives, ongoing disputes.',
+  },
+];
+
+// Entities for R6 bridge demonstration
+const ENTITIES = {
+  'e_trump':    { name: 'Donald Trump',     rep: 0.42, beliefs: 8 },
+  'e_iran':     { name: 'Iran',             rep: 0.78, beliefs: 11 },
+  'e_marshall': { name: 'Barry Marshall',   rep: 0.91, beliefs: 3 },
+  'e_wegener':  { name: 'Alfred Wegener',   rep: 0.58, beliefs: 4 },
+  'e_epstein':  { name: 'Jeffrey Epstein',  rep: 0.47, beliefs: 5 },
+  'e_alvarez':  { name: 'Luis Alvarez',     rep: 0.82, beliefs: 2 },
+  'e_ice':      { name: 'US ICE',           rep: 0.33, beliefs: 4 },
+  'e_asteroid': { name: 'Chicxulub crater', rep: 0.94, beliefs: 3 },
+  'e_deccan':   { name: 'Deccan Traps',     rep: 0.71, beliefs: 2 },
+  'e_hpylori':  { name: 'H. pylori',        rep: 0.96, beliefs: 9 },
+};
+
+// Helper to build belief records tersely
+function b(id, parent, desc, mass, voices, content, opts = {}) {
+  return {
+    id, parentId: parent,
+    desc, content, mass, voices,
+    lastVoice: opts.lastVoice || '2026-03-12',
+    rel: opts.rel || 'IMPLIES',  // IMPLIES or DISPUTES
+    entities: opts.entities || [],
+    stake: opts.stake || 0,
+    gapQuestions: opts.gapQuestions || [],  // inline "?" gap children
+    fieldId: opts.fieldId,
+  };
+}
+
+const BELIEFS_LIST = [
+  // ─── H. pylori (converged) ───
+  b('hp_root', null, 'H. pylori bacteria cause peptic ulcers', 0.97, 500,
+    'Before 1982, medical consensus held that peptic ulcers were caused by stress and acid hypersecretion. Barry Marshall and Robin Warren showed that Helicobacter pylori bacteria were the actual cause, overturning decades of accepted wisdom. Nobel Prize 2005.',
+    { entities: ['e_hpylori', 'e_marshall'], fieldId: 'f_hpylori' }),
+
+  b('hp_discovery', 'hp_root', 'Marshall & Warren discovery (1982)', 0.93, 45,
+    'Two Australian researchers at Royal Perth Hospital observed curved bacteria in gastric biopsies of ulcer patients. Initial reception in the medical community was dismissive.',
+    { entities: ['e_marshall'], fieldId: 'f_hpylori' }),
+
+  b('hp_selfexp', 'hp_discovery', 'Marshall drank the bacterial culture (1984)', 0.85, 1,
+    'Frustrated by skepticism, Marshall swallowed a Petri dish of H. pylori culture. Within days he developed gastritis. Endoscopy confirmed bacterial colonization. He treated himself with antibiotics and the infection cleared. This single self-experiment became the pivotal evidence.',
+    { entities: ['e_marshall'], fieldId: 'f_hpylori', stake: 0.43,
+      gapQuestions: [
+        { q: 'What mechanism made the infection take hold so quickly?', stake: 0.02 },
+        { q: 'Has this been reproduced in controlled trials?', stake: 0 }
+      ]}),
+
+  b('hp_biopsy', 'hp_discovery', 'Biopsies show H. pylori in ulcer patients', 0.95, 30,
+    'Warren\'s microscopy found curved bacteria in stomach biopsies from ulcer patients but not in control subjects. This was the foundational epidemiological correlation.',
+    { entities: ['e_hpylori'], fieldId: 'f_hpylori' }),
+
+  b('hp_mechanism', 'hp_root', 'Urease neutralizes stomach acid locally', 0.88, 20,
+    'H. pylori produces urease, which breaks down urea into ammonia, neutralizing stomach acid in the bacterium\'s immediate vicinity. This explains how the bacterium survives the previously blocking assumption that the stomach is too acidic for life.',
+    { entities: ['e_hpylori'], fieldId: 'f_hpylori' }),
+
+  b('hp_treatment', 'hp_root', 'Antibiotics cure ulcers (triple therapy)', 0.94, 60,
+    'Combination of proton pump inhibitor plus two antibiotics (clarithromycin + amoxicillin) eradicates H. pylori and cures ulcers. Recurrence drops 90% compared to acid suppression alone.',
+    { entities: ['e_hpylori'], fieldId: 'f_hpylori' }),
+
+  b('hp_reproducibility', 'hp_treatment', 'Reproduced in larger studies', 0.91, 40,
+    'Multi-center randomized trials through the 1990s confirmed eradication rates of 80-95% and ulcer recurrence reduction. Definitive evidence by 1994 NIH consensus conference.',
+    { fieldId: 'f_hpylori' }),
+
+  b('hp_cancer', 'hp_root', 'H. pylori linked to gastric cancer (1994)', 0.89, 30,
+    'WHO/IARC classified H. pylori as Group 1 carcinogen in 1994. Infection is the strongest known risk factor for gastric adenocarcinoma and MALT lymphoma. Eradication reduces cancer risk.',
+    { entities: ['e_hpylori'], fieldId: 'f_hpylori' }),
+
+  b('hp_stress_theory', 'hp_root', 'Stress causes ulcers (historical theory)', 0.08, 48,
+    'For most of the 20th century, medicine held that ulcers were caused by stress, spicy food, and acid hypersecretion. Patients were prescribed antacids and bland diets. This theory is preserved in the tree as a historical record — it is refuted but not deleted.',
+    { rel: 'DISPUTES', fieldId: 'f_hpylori' }),
+
+  b('hp_nobel', 'hp_discovery', 'Nobel Prize in Physiology (2005)', 0.98, 10,
+    'Marshall and Warren awarded the Nobel Prize in Physiology or Medicine "for their discovery of the bacterium Helicobacter pylori and its role in gastritis and peptic ulcer disease."',
+    { entities: ['e_marshall'], fieldId: 'f_hpylori' }),
+
+  b('hp_resistance', 'hp_treatment', 'Antibiotic resistance rising', 0.76, 15,
+    'Clarithromycin resistance rates have risen to 10-30% globally, threatening the efficacy of standard triple therapy. New regimens with metronidazole or quadruple therapy are being used.',
+    { fieldId: 'f_hpylori', lastVoice: '2024-11-20' }),
+
+  // ─── Dinosaur extinction (contested) ───
+  b('dino_root', null, 'Mass extinction ~66 million years ago', 0.99, 2000,
+    'At the Cretaceous-Paleogene boundary, ~75% of species went extinct, including all non-avian dinosaurs, marine reptiles, and ammonites. The extinction is geologically abrupt, visible as a thin iridium-rich layer worldwide. The FACT of the extinction is not contested — only its cause.',
+    { entities: ['e_asteroid', 'e_deccan'], fieldId: 'f_dinos' }),
+
+  b('dino_asteroid', 'dino_root', 'Asteroid impact (Alvarez 1980)', 0.72, 600,
+    'Father-son team Luis and Walter Alvarez proposed that a large asteroid impact caused the K-Pg extinction. Evidence includes the global iridium anomaly, shocked quartz, and the 180km Chicxulub crater dated precisely to 66 million years ago.',
+    { entities: ['e_alvarez', 'e_asteroid'], fieldId: 'f_dinos' }),
+
+  b('dino_iridium', 'dino_asteroid', 'Iridium layer at K-Pg boundary', 0.96, 300,
+    'Iridium concentration in the K-Pg boundary clay is 10-100x above background. Iridium is rare in Earth\'s crust but common in asteroids, making this the smoking gun for impact. Found at hundreds of sites globally.',
+    { fieldId: 'f_dinos' }),
+
+  b('dino_crater', 'dino_asteroid', 'Chicxulub crater confirmed', 0.91, 150,
+    'The 180km Chicxulub impact crater under the Yucatan Peninsula was identified in 1991 and dated to 66.04 ± 0.05 Ma — matching the extinction horizon exactly.',
+    { entities: ['e_asteroid'], fieldId: 'f_dinos' }),
+
+  b('dino_volcanism', 'dino_root', 'Deccan Traps volcanism', 0.58, 250,
+    'Massive flood basalt eruptions in India (Deccan Traps) produced ~10^6 km³ of lava over hundreds of thousands of years, spanning the K-Pg boundary. Sulfur aerosols would have caused climate disruption and ocean acidification. This is an alternative cause hypothesis to the asteroid.',
+    { rel: 'DISPUTES', entities: ['e_deccan'], fieldId: 'f_dinos' }),
+
+  b('dino_deccan_basalt', 'dino_volcanism', 'Basalt volume spans the boundary', 0.93, 80,
+    'Radiometric dating shows Deccan Traps eruptions began ~400,000 years before the K-Pg boundary and continued for ~400,000 years after. The eruption peak correlates with the extinction.',
+    { entities: ['e_deccan'], fieldId: 'f_dinos' }),
+
+  b('dino_permian_precedent', 'dino_volcanism', 'Volcanism caused Permian extinction', 0.85, 50,
+    'The Permian-Triassic "Great Dying" (~252 Ma) is widely attributed to Siberian Traps volcanism — a precedent that volcanism alone can cause mass extinction without an impact.',
+    { fieldId: 'f_dinos',
+      gapQuestions: [{ q: 'Is the Permian pattern structurally similar to K-Pg?', stake: 0.05 }] }),
+
+  b('dino_multi', 'dino_root', 'Multi-causal (asteroid + volcanism)', 0.61, 120,
+    'Synthesis view: ecosystems were already stressed by ongoing Deccan volcanism when the Chicxulub impact delivered the final blow. Neither cause alone produced the extinction — both combined did. This compromise position is gaining ground but not yet dominant.',
+    { fieldId: 'f_dinos' }),
+
+  b('dino_stressed', 'dino_multi', 'Species were declining pre-impact', 0.72, 60,
+    'Fossil record shows dinosaur diversity was already declining in the ~500,000 years before the impact, consistent with environmental stress from volcanism preceding the impact coup de grâce.',
+    { fieldId: 'f_dinos' }),
+
+  b('dino_recovery', 'dino_multi', 'Recovery patterns show multiple phases', 0.68, 30,
+    'Post-extinction biological recovery happened in phases over 5-10 million years. Some lineages that survived the impact died off later, consistent with extended environmental disturbance.',
+    { fieldId: 'f_dinos' }),
+
+  b('dino_kt_climate', 'dino_asteroid', 'Nuclear-winter climate model', 0.74, 60,
+    'Impact dust, soot from wildfires, and sulfur from vaporized anhydrite would have blocked sunlight for months to years, collapsing photosynthesis. Models can reproduce the extinction severity from impact effects alone.',
+    { fieldId: 'f_dinos' }),
+
+  // ─── Iran conflict (active) ───
+  b('iran_root', null, 'US-Iran military confrontation (2026)', 0.79, 180,
+    'Active military conflict between the US and Iran following escalation from proxy incidents. Multiple confirmed strikes, counter-strikes, and diplomatic activity. Situation is fluid.',
+    { entities: ['e_iran', 'e_trump'], fieldId: 'f_iran' }),
+
+  b('iran_f35', 'iran_root', 'F-35 hit by Iranian fire', 0.75, 8,
+    'A US F-35 aircraft was damaged by Iranian air defense during operations over the Persian Gulf region. First confirmed Iranian hit on a US fifth-generation aircraft. Details of the engagement and weapon used are contested.',
+    { entities: ['e_iran'], fieldId: 'f_iran', stake: 0.85,
+      gapQuestions: [
+        { q: 'What weapon system was used?', stake: 0.12 },
+        { q: 'Was the aircraft recovered or lost?', stake: 0.08 }
+      ]}),
+
+  b('iran_s300', 'iran_f35', 'Iran used modified S-300 variant', 0.62, 3,
+    'Intelligence assessments suggest the weapon was a modified S-300 system with upgraded radar, possibly with Russian assistance. Alternative reports suggest an indigenous Bavar-373 variant.',
+    { fieldId: 'f_iran' }),
+
+  b('iran_landing', 'iran_f35', 'F-35 made emergency landing', 0.81, 5,
+    'Aircraft reportedly made an emergency landing at a friendly base in the region. Pilot was recovered safely. Aircraft damage assessment is ongoing.',
+    { fieldId: 'f_iran' }),
+
+  b('iran_first_hit', 'iran_f35', 'First Iranian hit on US fifth-gen aircraft', 0.41, 5,
+    'If confirmed, this would be the first successful Iranian engagement of a US stealth aircraft. Significance is debated — some analysts argue it was a lucky shot, others that it reveals a real capability gap.',
+    { fieldId: 'f_iran' }),
+
+  b('iran_trump_threat', 'iran_root', 'Trump threatens "wipe out a whole civilization"', 0.82, 20,
+    'On Truth Social, President Trump threatened to "wipe out a whole civilization" if Iran retaliated further. Statement was widely reported and verified from the official account.',
+    { entities: ['e_trump', 'e_iran'], fieldId: 'f_iran' }),
+
+  b('iran_25a_push', 'iran_trump_threat', 'Democrats push 25th Amendment', 0.68, 10,
+    'Over 50 Democratic House members signed a letter calling for invocation of the 25th Amendment, citing the Iran threat language as evidence of unfitness. Republican leadership rejected the effort.',
+    { entities: ['e_trump'], fieldId: 'f_iran' }),
+
+  b('iran_democrat_counter', 'iran_25a_push', 'Republicans reject 25A claim', 0.55, 8,
+    'House Republican leadership dismissed the Democratic effort as political theater, pointing to Trump\'s prior track record of strong rhetoric followed by negotiation.',
+    { rel: 'DISPUTES', fieldId: 'f_iran' }),
+
+  b('iran_ceasefire', 'iran_root', 'Iran open to ceasefire negotiations', 0.64, 3,
+    'Iranian Foreign Minister Abbas Araqchi stated Iran is open to ceasefire talks while defending its response. Mixed signals from the regime about willingness to de-escalate.',
+    { entities: ['e_iran'], fieldId: 'f_iran' }),
+
+  b('iran_lebanon', 'iran_root', 'Hezbollah mobilizing in Lebanon', 0.71, 12,
+    'Reports of Hezbollah forces moving into forward positions in southern Lebanon. Israeli military has raised alert levels. Possible expansion of the conflict into a multi-front war.',
+    { fieldId: 'f_iran',
+      gapQuestions: [{ q: 'Is there direct Iranian command involvement?', stake: 0.15 }] }),
+
+  b('iran_hormuz', 'iran_root', 'Strait of Hormuz remains open to shipping', 0.58, 8,
+    'Despite escalation, commercial shipping through the Strait of Hormuz continues with no major disruptions reported. Insurance rates have increased but traffic is near normal.',
+    { rel: 'DISPUTES', fieldId: 'f_iran' }),
+
+  b('iran_iraq', 'iran_root', 'US bases in Iraq on high alert', 0.73, 6,
+    'US forces at Al-Assad and Erbil bases have raised security levels. No direct attacks reported in the past 48 hours. Intelligence suggests Iranian proxy groups are considering strikes.',
+    { fieldId: 'f_iran', lastVoice: '2026-03-26' }),
+
+  b('iran_diplomatic', 'iran_ceasefire', 'Oman mediating backchannel talks', 0.52, 2,
+    'Oman is reportedly facilitating backchannel communications between Washington and Tehran. Previous Oman mediation helped produce the original 2015 nuclear agreement.',
+    { fieldId: 'f_iran' }),
+
+  // ─── Continental drift (reversed) ───
+  b('drift_root', null, 'Plate tectonics: continents drift on moving plates', 0.96, 800,
+    'The foundational framework of modern geology. Continents are embedded in rigid plates that move across the Earth\'s surface at rates of a few cm/year, driven by mantle convection. Original proposal (Wegener 1912) was rejected for 50+ years before being accepted.',
+    { entities: ['e_wegener'], fieldId: 'f_drift' }),
+
+  b('drift_wegener', 'drift_root', 'Wegener\'s original proposal (1912)', 0.93, 25,
+    'German meteorologist Alfred Wegener proposed in "The Origin of Continents and Oceans" that continents had once been joined in a single supercontinent he called Pangaea and had drifted apart. He was ridiculed for decades because no known mechanism could move continents.',
+    { entities: ['e_wegener'], fieldId: 'f_drift' }),
+
+  b('drift_fossils', 'drift_wegener', 'Matching fossil patterns across continents', 0.94, 40,
+    'Identical fossil species (like Mesosaurus, Glossopteris) found on separate continents that are now thousands of miles apart. The fit becomes obvious if the continents are reconstructed as joined. Wegener\'s primary evidence.',
+    { fieldId: 'f_drift' }),
+
+  b('drift_coastlines', 'drift_wegener', 'Coastlines of S America and Africa fit', 0.91, 30,
+    'The eastern coast of South America and the western coast of Africa fit together with remarkable precision, especially when considering the continental shelves rather than current shorelines.',
+    { fieldId: 'f_drift' }),
+
+  b('drift_seafloor', 'drift_root', 'Sea-floor spreading (Hess, Dietz 1960)', 0.95, 50,
+    'Discovery that oceanic crust is created at mid-ocean ridges and destroyed at subduction zones. Magnetic stripes parallel to ridges record reversals of Earth\'s magnetic field, providing a "tape recording" of plate motion. This provided the MECHANISM Wegener\'s theory lacked.',
+    { fieldId: 'f_drift' }),
+
+  b('drift_paleomag', 'drift_seafloor', 'Paleomagnetic evidence', 0.88, 20,
+    'Magnetic minerals in rocks record the direction and inclination of Earth\'s magnetic field at the time of formation. Rocks of different ages show systematic differences that can only be explained by plate motion.',
+    { fieldId: 'f_drift' }),
+
+  b('drift_earthquakes', 'drift_root', 'Earthquake distribution traces plate boundaries', 0.89, 25,
+    'Global earthquake distribution maps directly onto predicted plate boundaries — ocean trenches, mid-ocean ridges, and transform faults. The pattern was inexplicable before plate tectonics.',
+    { fieldId: 'f_drift' }),
+
+  b('drift_fixed_theory', 'drift_root', 'Continents are fixed in position (historical)', 0.04, 250,
+    'For over a century, geology held that continents and oceans were permanent features and that the Earth was cooling and contracting. This theory required auxiliary hypotheses like "land bridges that sank" to explain fossil distribution. Refuted but preserved as historical record.',
+    { rel: 'DISPUTES', fieldId: 'f_drift' }),
+
+  b('drift_no_mechanism', 'drift_fixed_theory', 'No mechanism could move continents (argument)', 0.04, 200,
+    'The primary argument against Wegener was the lack of a plausible physical mechanism. The geophysicist Harold Jeffreys calculated that continents could not plow through oceanic crust. This was structurally correct — continents don\'t plow through crust, they RIDE ON plates. The mechanism question was valid but solved differently than expected.',
+    { rel: 'DISPUTES', fieldId: 'f_drift' }),
+
+  // ─── Epstein (contested) ───
+  b('eps_root', null, 'Jeffrey Epstein died in custody (2019)', 0.86, 200,
+    'Epstein was found dead in his cell at the Metropolitan Correctional Center on August 10, 2019, while awaiting trial on sex trafficking charges. The NYC medical examiner ruled suicide. Multiple competing narratives persist.',
+    { entities: ['e_epstein'], fieldId: 'f_epstein' }),
+
+  b('eps_official', 'eps_root', 'Medical examiner ruled suicide by hanging', 0.72, 40,
+    'NYC Chief Medical Examiner Barbara Sampson ruled the death a suicide by hanging. Official cause: ligature strangulation with a bedsheet. This is the formal government finding.',
+    { fieldId: 'f_epstein' }),
+
+  b('eps_baden', 'eps_root', 'Dr. Baden: injuries suggest homicide', 0.41, 5,
+    'Dr. Michael Baden, former NYC chief medical examiner hired by the Epstein family, observed that the neck injuries (hyoid fracture) were "more consistent with homicidal strangulation than suicidal hanging." His findings were contested by Sampson.',
+    { rel: 'DISPUTES', fieldId: 'f_epstein', stake: 0.25,
+      gapQuestions: [{ q: 'Were the injuries independently re-examined?', stake: 0.15 }] }),
+
+  b('eps_guards', 'eps_root', 'Guards fabricated monitoring logs', 0.78, 25,
+    'Two prison guards (Tova Noel, Michael Thomas) admitted to falsifying records showing they were checking on Epstein every 30 minutes, when they were actually sleeping or browsing the internet. Both pleaded guilty to conspiracy.',
+    { fieldId: 'f_epstein' }),
+
+  b('eps_cameras', 'eps_guards', 'Surveillance cameras malfunctioned', 0.68, 15,
+    'Two cameras outside Epstein\'s cell malfunctioned on the night of his death. One footage file was lost entirely. DOJ Inspector General attributed this to equipment failure; critics argue the timing is suspicious.',
+    { fieldId: 'f_epstein',
+      gapQuestions: [{ q: 'Was the lost footage recovered from any source?', stake: 0.18 }] }),
+
+  b('eps_files_2026', 'eps_root', 'Newly surfaced case files (2026)', 0.74, 30,
+    'Millions of pages of previously sealed case materials released in 2026 contain new details about Epstein\'s network, investigations, and final days. Legal teams are still analyzing.',
+    { fieldId: 'f_epstein' }),
+
+  b('eps_trump_photos', 'eps_files_2026', 'Photos with prominent figures', 0.81, 50,
+    'Newly released photos show Epstein with multiple high-profile individuals including former presidents, business executives, and academics. The photos themselves are not evidence of wrongdoing but confirm long-denied associations.',
+    { entities: ['e_trump', 'e_epstein'], fieldId: 'f_epstein' }),
+
+  b('eps_bankers', 'eps_files_2026', 'Bankers named in files', 0.69, 20,
+    'Several senior bank executives from JPMorgan and Deutsche Bank are named in the newly released files as having facilitated Epstein\'s financial activities despite internal red flags. Banks paid settlements earlier but individuals were not prosecuted.',
+    { fieldId: 'f_epstein' }),
+
+  b('eps_maxwell', 'eps_root', 'Ghislaine Maxwell convicted (2021)', 0.92, 60,
+    'Epstein\'s long-time associate Ghislaine Maxwell was convicted on federal sex trafficking charges in December 2021 and sentenced to 20 years in prison. Her conviction relies on the same victim testimony that would have been key in Epstein\'s trial.',
+    { fieldId: 'f_epstein' }),
+
+  b('eps_cover_up', 'eps_root', 'Cover-up theory', 0.34, 80,
+    'A widespread alternative narrative holds that Epstein was murdered to prevent him from naming powerful associates. This theory persists despite the official suicide ruling. Polls show large fractions of the public believe it, but evidence is circumstantial.',
+    { rel: 'DISPUTES', fieldId: 'f_epstein' }),
+];
+
+// Build indexed graph
+const BELIEFS = Object.fromEntries(BELIEFS_LIST.map(b => [b.id, b]));
+
+// Compute children for each belief
+Object.values(BELIEFS).forEach(b => b.childrenIds = []);
+Object.values(BELIEFS).forEach(b => {
+  if (b.parentId && BELIEFS[b.parentId]) {
+    BELIEFS[b.parentId].childrenIds.push(b.id);
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════
+// GAP DETECTION
+// ═══════════════════════════════════════════════════════════════
+
+function detectGaps(belief) {
+  const gaps = [];
+  if (belief.voices === 1) {
+    gaps.push({ type: 'single_voice', icon: '🔔', label: 'single voice — needs corroboration' });
+  }
+  const hasDispute = belief.childrenIds.some(cid => BELIEFS[cid].rel === 'DISPUTES');
+  if (belief.voices > 5 && !hasDispute && belief.rel !== 'DISPUTES') {
+    gaps.push({ type: 'no_dispute', icon: '⊥?', label: 'no counter-argument recorded' });
+  }
+  // Stale: last voice > 6 months ago
+  const lastDate = new Date(belief.lastVoice);
+  const staleMonths = (new Date('2026-04-09') - lastDate) / (1000 * 60 * 60 * 24 * 30);
+  if (staleMonths > 6) {
+    gaps.push({ type: 'stale', icon: '⏰', label: `stale (${Math.floor(staleMonths)} months old)` });
+  }
+  return gaps;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// STATE & NAVIGATION
+// ═══════════════════════════════════════════════════════════════
+
+let walkState = {
+  fieldId: null,
+  trail: [],  // array of belief IDs from entry to focus
+};
+
+function enterField(fieldId) {
+  const field = FIELDS.find(f => f.id === fieldId);
+  if (!field) return;
+  walkState = { fieldId, trail: [field.rootId] };
+  render();
+}
+
+function walkTo(beliefId) {
+  // Don't re-walk if already focused
+  if (walkState.trail[walkState.trail.length - 1] === beliefId) return;
+
+  // If target is the parent of current focus, retreat one step
+  const currentFocus = walkState.trail[walkState.trail.length - 1];
+  const currentBelief = BELIEFS[currentFocus];
+  if (currentBelief && currentBelief.parentId === beliefId) {
+    walkState.trail.pop();
+  } else {
+    // Otherwise, step forward
+    walkState.trail.push(beliefId);
+  }
+  render();
+}
+
+function retreatTo(index) {
+  walkState.trail = walkState.trail.slice(0, index + 1);
+  render();
+}
+
+function escapeToEntry() {
+  walkState = { fieldId: null, trail: [] };
+  render();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RENDERING
+// ═══════════════════════════════════════════════════════════════
+
+function massBar(mass) {
+  const pct = Math.max(0, Math.min(100, mass * 100));
+  return `<span class="mass-bar">
+    <span class="mass-bar-fill" style="--mass: ${pct}%"></span>
+    <span style="font-variant-numeric: tabular-nums;">${mass.toFixed(2)}</span>
+  </span>`;
+}
+
+function renderEntity(eid) {
+  const e = ENTITIES[eid];
+  if (!e) return '';
+  return `<span class="entity-chip" title="Reputation: ${e.rep.toFixed(2)} across ${e.beliefs} beliefs">
+    ${e.name}<span class="rep">rep ${e.rep.toFixed(2)}</span>
+  </span>`;
+}
+
+function renderSibling(belief) {
+  const gaps = detectGaps(belief);
+  const isDispute = belief.rel === 'DISPUTES';
+  const prefix = isDispute ? '⊥ ' : '';
+  const gapHint = gaps.length > 0 ? `<span class="child-gap-hint">${gaps.length} gap${gaps.length>1?'s':''}</span>` : '';
+  return `
+    <div class="sibling ${isDispute ? 'dispute' : ''}" onclick="walkTo('${belief.id}')">
+      <span class="sibling-text">${prefix}${belief.desc}</span>
+      <span class="sibling-meta">
+        ${gapHint}
+        ${massBar(belief.mass)}
+        <span class="voices-badge">👥${belief.voices}</span>
+      </span>
+    </div>
+  `;
+}
+
+function renderChildRow(belief) {
+  const gaps = detectGaps(belief);
+  const isDispute = belief.rel === 'DISPUTES';
+  const prefix = isDispute ? '⊥ ' : '▸ ';
+  const nc = belief.childrenIds.length;
+  const countBadge = nc > 0 ? `<span class="child-children-count">+${nc}</span>` : '';
+  const gapHint = gaps.length > 0 ? `<span class="child-gap-hint">${gaps[0].icon}</span>` : '';
+  return `
+    <div class="child ${isDispute ? 'dispute' : ''}" onclick="walkTo('${belief.id}')">
+      <span class="child-text">${prefix}${belief.desc}</span>
+      ${gapHint}
+      ${massBar(belief.mass)}
+      <span class="voices-badge" style="font-size: 11px; color: var(--text-dim);">👥${belief.voices}</span>
+      ${countBadge}
+    </div>
+  `;
+}
+
+function renderGapChild(gap) {
+  return `
+    <div class="gap-child" onclick="openGapModal('${gap.q.replace(/'/g, "\\'")}', ${gap.stake})">
+      <span>?</span>
+      <span class="gap-question">${gap.q}</span>
+      ${gap.stake > 0 ? `<span class="gap-stake">💰 ${gap.stake.toFixed(2)}¢</span>` : ''}
+    </div>
+  `;
+}
+
+function renderFocusNode(belief) {
+  const parent = belief.parentId ? BELIEFS[belief.parentId] : null;
+  const gaps = detectGaps(belief);
+  const children = belief.childrenIds.map(cid => BELIEFS[cid]);
+  const isDispute = belief.rel === 'DISPUTES';
+
+  // Siblings: other children of the same parent
+  let siblingsAbove = [], siblingsBelow = [];
+  if (parent) {
+    const siblings = parent.childrenIds
+      .filter(cid => cid !== belief.id)
+      .map(cid => BELIEFS[cid])
+      .sort((a, b) => b.mass - a.mass);
+    const split = Math.ceil(siblings.length / 2);
+    siblingsAbove = siblings.slice(0, split);
+    siblingsBelow = siblings.slice(split);
+  }
+
+  const siblingsAboveHtml = siblingsAbove.length ? `
+    <div class="sibling-group above">
+      <div class="group-label">parallel siblings (${siblingsAbove.length + siblingsBelow.length} total)</div>
+      ${siblingsAbove.map(renderSibling).join('')}
+    </div>` : '';
+
+  const siblingsBelowHtml = siblingsBelow.length ? `
+    <div class="sibling-group below">
+      ${siblingsBelow.map(renderSibling).join('')}
+    </div>` : '';
+
+  const gapMarkersHtml = gaps.length > 0 ? `
+    <div class="gap-markers">
+      ${gaps.map(g => `<span class="gap-marker" onclick="openGapModal('${g.label}', 0)">${g.icon} ${g.label}</span>`).join('')}
+      ${belief.stake > 0 ? `<span class="stake-badge" style="font-size: 12px;">💰 ${belief.stake.toFixed(2)}¢ staked</span>` : ''}
+    </div>` : (belief.stake > 0 ? `<div class="gap-markers"><span class="stake-badge">💰 ${belief.stake.toFixed(2)}¢ staked</span></div>` : '');
+
+  const entitiesHtml = belief.entities.length ? `
+    <div class="entities-row">
+      ${belief.entities.map(renderEntity).join('')}
+    </div>` : '';
+
+  const childrenHtml = children.length || belief.gapQuestions.length ? `
+    <div class="children-header">in depth · ${children.length} children${belief.gapQuestions.length ? ` · ${belief.gapQuestions.length} open question${belief.gapQuestions.length>1?'s':''}` : ''}</div>
+    <div class="children">
+      ${children.sort((a,b) => b.mass - a.mass).map(renderChildRow).join('')}
+      ${belief.gapQuestions.map(renderGapChild).join('')}
+    </div>` : '';
+
+  return `
+    ${siblingsAboveHtml}
+    <article class="focus ${isDispute ? 'dispute' : ''}">
+      <h2>${isDispute ? '⊥ ' : ''}${belief.desc}</h2>
+      <div class="focus-metrics">
+        ${massBar(belief.mass)}
+        <span class="voices-badge">👥 ${belief.voices} voices</span>
+        <span class="time-badge">🕐 ${belief.lastVoice}</span>
+      </div>
+      ${gapMarkersHtml}
+      ${entitiesHtml}
+      <div class="focus-content">${belief.content}</div>
+      ${childrenHtml}
+    </article>
+    ${siblingsBelowHtml}
+  `;
+}
+
+function renderTrail() {
+  const trail = walkState.trail;
+  if (!trail.length) return '';
+  return trail.map((id, i) => {
+    const belief = BELIEFS[id];
+    const isLast = i === trail.length - 1;
+    const sep = i > 0 ? '<span class="sep">›</span>' : '';
+    const cls = isLast ? 'crumb current' : 'crumb';
+    const click = isLast ? '' : `onclick="retreatTo(${i})"`;
+    const text = belief ? (belief.desc.length > 40 ? belief.desc.slice(0, 40) + '…' : belief.desc) : id;
+    return `${sep}<span class="${cls}" ${click}>${text}</span>`;
+  }).join('');
+}
+
+function renderFieldBadge() {
+  if (!walkState.fieldId) return '';
+  const field = FIELDS.find(f => f.id === walkState.fieldId);
+  return field ? field.label : '';
+}
+
+function renderFieldList() {
+  return FIELDS.map(f => `
+    <div class="field-card" onclick="enterField('${f.id}')">
+      <h3>${f.label}</h3>
+      <div class="meta">
+        <span class="state-tag ${f.state}">${f.state}</span>
+        <span>${f.size} beliefs</span>
+        <span>${f.description}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function render() {
+  const entryView = document.getElementById('entryView');
+  const walkView = document.getElementById('walkView');
+  const escapeBtn = document.getElementById('escapeBtn');
+  const trail = document.getElementById('trail');
+  const fieldBadge = document.getElementById('fieldBadge');
+  const fieldList = document.getElementById('fieldList');
+
+  if (!walkState.fieldId) {
+    entryView.classList.remove('hidden');
+    walkView.classList.add('hidden');
+    fieldList.innerHTML = renderFieldList();
+    escapeBtn.disabled = true;
+    trail.innerHTML = '';
+    fieldBadge.textContent = '';
+  } else {
+    entryView.classList.add('hidden');
+    walkView.classList.remove('hidden');
+    const focusId = walkState.trail[walkState.trail.length - 1];
+    const focus = BELIEFS[focusId];
+    if (focus) {
+      walkView.innerHTML = renderFocusNode(focus);
+    }
+    escapeBtn.disabled = false;
+    trail.innerHTML = renderTrail();
+    fieldBadge.textContent = renderFieldBadge();
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// GAP MODAL
+// ═══════════════════════════════════════════════════════════════
+
+function openGapModal(question, stake) {
+  document.getElementById('modalTitle').textContent = 'Contribute evidence';
+  document.getElementById('modalBody').textContent = question;
+  document.getElementById('stakeInput').value = (stake || 0.05).toFixed(2);
+  document.getElementById('modalText').value = '';
+  document.getElementById('modalBackdrop').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modalBackdrop').classList.remove('open');
+}
+
+document.getElementById('modalCancel').onclick = closeModal;
+document.getElementById('modalSubmit').onclick = () => {
+  const text = document.getElementById('modalText').value.trim();
+  if (!text) { alert('Please enter your claim'); return; }
+  alert(`Prototype: claim submitted.\n\nIn the real system, this would:\n1. Enter the sense pipeline\n2. Land in the nearest field\n3. Trigger CONFIRM/DENY/ADD/CAUSE\n4. Update your entity reputation\n5. Distribute stake if mass moves\n\nClaim: "${text}"`);
+  closeModal();
+};
+document.getElementById('modalBackdrop').onclick = (e) => {
+  if (e.target.id === 'modalBackdrop') closeModal();
+};
+
+// Escape button & keyboard
+document.getElementById('escapeBtn').onclick = escapeToEntry;
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    if (document.getElementById('modalBackdrop').classList.contains('open')) {
+      closeModal();
+    } else if (walkState.trail.length > 1) {
+      walkState.trail.pop();
+      render();
+    } else if (walkState.fieldId) {
+      escapeToEntry();
+    }
+  } else if (e.key === 'ArrowLeft' && walkState.trail.length > 1) {
+    walkState.trail.pop();
+    render();
+  }
+});
+
+// Init
+render();
+</script>
+
+</body>
+</html>
