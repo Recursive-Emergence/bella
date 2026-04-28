@@ -2,6 +2,10 @@
 
 A formal language and engine for constructing belief structures from evidence streams.
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Recursive-Emergence/bella/main/hero.svg" alt="What BELLA buys you — sixteen real HCQ headlines as a flat news feed vs. as a BELLA belief structure with disputes visible and verdict m = 0.000" width="100%"/>
+</p>
+
 ## What is BELLA?
 
 BELLA takes a stream of claims from diverse sources and progressively builds an **epistemic belief tree** — a structured representation of what is known, disputed, and uncertain about a topic.
