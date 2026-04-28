@@ -1,5 +1,18 @@
 # BELLA Changelog
 
+## Unreleased — 2026-04-28
+
+### Theory
+- `JAYNES.md` added — names what BELLA inherits from Jaynes (evidence
+  as log-odds, the three desiderata with empirical verification of
+  3(a) via `shuffle_test.py`, priors as background information,
+  multiple-hypotheses requirement, MLE brittleness), where it lands
+  on the Jaynes/Pearl divide (Jaynes side, with the Ch. 3
+  randomization quote as the philosophical anchor), where it extends
+  Jaynes (R2–R6 are above the inference primitives), and where it
+  specializes Jaynes (the voice-independence attenuation, with
+  cross-source dependence as open work the HCQ trajectory exposes).
+
 ## Unreleased — 2026-04-26
 
 ### Theory
