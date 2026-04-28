@@ -3,7 +3,7 @@
 A formal language and engine for constructing belief structures from evidence streams.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Recursive-Emergence/bella/main/hero.svg" alt="What BELLA buys you — sixteen real HCQ headlines as a flat news feed vs. as a BELLA belief structure with disputes visible and verdict m = 0.000" width="100%"/>
+  <img src="https://raw.githubusercontent.com/Recursive-Emergence/bella/main/hero.svg" alt="A worked example: a break-in at a gallery, two paintings, three witnesses. The Guard's single claim 'both there at midnight' is evidence on both propositions — one entity, two effects, one hyperedge. Posterior: P1 (Sunset stolen) +3 dB, P2 (Storm stolen) -26 dB. When the Guard's claim conflicts with the Camera, his reputation drops and his evidence on P2 also weakens — even though no new evidence about Storm arrived." width="100%"/>
 </p>
 
 ## What is BELLA?

@@ -1,255 +1,214 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg viewBox="0 0 1400 900" xmlns="http://www.w3.org/2000/svg"
+<svg viewBox="0 0 1200 760" xmlns="http://www.w3.org/2000/svg"
      font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, sans-serif">
-  <!-- BACKGROUND -->
-  <rect width="1400" height="900" fill="#0d1117"/>
+
+  <defs>
+    <marker id="arr-sup" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#62d196"/>
+    </marker>
+    <marker id="arr-cnt" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#fb7185"/>
+    </marker>
+    <marker id="arr-hyp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#c39bd3"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="760" fill="#0d1117"/>
 
   <!-- ─── TITLE ─── -->
   <g transform="translate(40, 32)">
-    <text x="0" y="20" font-size="24" font-weight="500" fill="#e6edf3" letter-spacing="-0.01em">
-      What BELLA buys you
+    <text x="0" y="20" font-size="22" font-weight="500" fill="#e6edf3" letter-spacing="-0.01em">
+      A worked example, Jaynes-style — with one hyperedge
     </text>
-    <text x="0" y="46" font-size="13" fill="#8b949e">
-      Sixteen real headlines about hydroxychloroquine for COVID-19, March 2020 – March 2021. Same evidence, two presentations.
+    <text x="0" y="44" font-size="13" fill="#8b949e">
+      A break-in at the gallery. Two paintings on display: Sunset and Storm. Three witnesses come forward.
+      Which painting (if any) was stolen?
     </text>
   </g>
 
   <!-- COLUMN HEADERS -->
-  <text x="60" y="120" font-size="11" font-weight="600" fill="#8b949e" letter-spacing="0.12em">
-    AS YOU ENCOUNTER IT — A NEWS FEED
+  <text x="60" y="110" font-size="11" font-weight="600" fill="#8b949e" letter-spacing="0.12em">
+    THE HYPERGRAPH
   </text>
-  <text x="740" y="120" font-size="11" font-weight="600" fill="#8b949e" letter-spacing="0.12em">
-    AS BELLA ASSEMBLES IT — A BELIEF STRUCTURE
+  <text x="640" y="110" font-size="11" font-weight="600" fill="#8b949e" letter-spacing="0.12em">
+    THE ACCUMULATION (decibels of evidence)
   </text>
 
-  <!-- COLUMN DIVIDER -->
-  <line x1="700" y1="100" x2="700" y2="830" stroke="#30363d" stroke-width="1"/>
+  <line x1="610" y1="92" x2="610" y2="600" stroke="#30363d" stroke-width="1"/>
 
   <!-- ════════════════════════════════════════════════════════════════ -->
-  <!--  LEFT PANEL — chronological news feed                            -->
+  <!--  LEFT PANEL — hypergraph                                         -->
   <!-- ════════════════════════════════════════════════════════════════ -->
-  <g transform="translate(60, 150)" font-size="12">
-    <!-- 16 rows · 38px each -->
 
-    <g transform="translate(0, 0)">
-      <text font-family="ui-monospace, monospace" fill="#6e7681">2020-03-16</text>
-      <text x="92" fill="#8b949e">Raoult IHU</text>
-      <text x="200" fill="#e6edf3">French team reports HCQ + azithromycin effective in 36 patients</text>
-    </g>
-    <g transform="translate(0, 38)">
-      <text font-family="ui-monospace, monospace" fill="#6e7681">2020-03-19</text>
-      <text x="92" fill="#8b949e">Trump</text>
-      <text x="200" fill="#e6edf3">"Game changer" — White House briefing</text>
-    </g>
-    <g transform="translate(0, 76)">
-      <text font-family="ui-monospace, monospace" fill="#6e7681">2020-03-28</text>
-      <text x="92" fill="#8b949e">FDA</text>
-      <text x="200" fill="#e6edf3">Emergency use authorization issued</text>
-    </g>
-    <g transform="translate(0, 114)">
-      <text font-family="ui-monospace, monospace" fill="#6e7681">2020-03-30</text>
-      <text x="92" fill="#8b949e">Zelenko</text>
-      <text x="200" fill="#e6edf3">Case series of 350 patients reports recovery</text>
-    </g>
-    <g transform="translate(0, 152)">
-      <text font-family="ui-monospace, monospace" fill="#6e7681">2020-04-10</text>
-      <text x="92" fill="#8b949e">NIH panel</text>
-      <text x="200" fill="#e6edf3">Recommends against HCQ for COVID-19</text>
-    </g>
-    <g transform="translate(0, 190)">
-      <text font-family="ui-monospace, monospace" fill="#6e7681">2020-04-21</text>
-      <text x="92" fill="#8b949e">VA study</text>
-      <text x="200" fill="#e6edf3">Observational: increased mortality with HCQ</text>
-    </g>
-    <g transform="translate(0, 228)">
-      <text font-family="ui-monospace, monospace" fill="#6e7681">2020-04-24</text>
-      <text x="92" fill="#8b949e">FDA</text>
-      <text x="200" fill="#e6edf3">Cardiac safety warning</text>
-    </g>
-    <g transform="translate(0, 266)">
-      <text font-family="ui-monospace, monospace" fill="#6e7681">2020-05-22</text>
-      <text x="92" fill="#8b949e">Lancet/Mehra</text>
-      <text x="200" fill="#e6edf3">Large observational study: HCQ harmful</text>
-    </g>
-    <g transform="translate(0, 304)">
-      <text font-family="ui-monospace, monospace" fill="#6e7681">2020-06-04</text>
-      <text x="92" fill="#8b949e">Lancet</text>
-      <text x="200" fill="#e6edf3">Retracts the Mehra study</text>
-    </g>
-    <g transform="translate(0, 342)">
-      <text font-family="ui-monospace, monospace" fill="#6e7681">2020-06-05</text>
-      <text x="92" fill="#8b949e">RECOVERY</text>
-      <text x="200" fill="#e6edf3">Randomized trial: no benefit (n = 4716)</text>
-    </g>
-    <g transform="translate(0, 380)">
-      <text font-family="ui-monospace, monospace" fill="#6e7681">2020-06-15</text>
-      <text x="92" fill="#8b949e">FDA</text>
-      <text x="200" fill="#e6edf3">Revokes emergency use authorization</text>
-    </g>
-    <g transform="translate(0, 418)">
-      <text font-family="ui-monospace, monospace" fill="#6e7681">2020-07-02</text>
-      <text x="92" fill="#8b949e">Henry Ford</text>
-      <text x="200" fill="#e6edf3">Observational: HCQ reduces mortality</text>
-    </g>
-    <g transform="translate(0, 456)">
-      <text font-family="ui-monospace, monospace" fill="#6e7681">2020-10-15</text>
-      <text x="92" fill="#8b949e">WHO</text>
-      <text x="200" fill="#e6edf3">Solidarity randomized trial: no mortality benefit</text>
-    </g>
-    <g transform="translate(0, 494)">
-      <text font-family="ui-monospace, monospace" fill="#6e7681">2020-11-16</text>
-      <text x="92" fill="#8b949e">Cavalcanti BR</text>
-      <text x="200" fill="#e6edf3">Brazilian randomized trial: no benefit</text>
-    </g>
-    <g transform="translate(0, 532)">
-      <text font-family="ui-monospace, monospace" fill="#6e7681">2021-02-15</text>
-      <text x="92" fill="#8b949e">Cochrane</text>
-      <text x="200" fill="#e6edf3">Systematic review: HCQ not effective</text>
-    </g>
-    <g transform="translate(0, 570)">
-      <text font-family="ui-monospace, monospace" fill="#6e7681">2021-03-15</text>
-      <text x="92" fill="#8b949e">Raoult IHU</text>
-      <text x="200" fill="#e6edf3">Continues to defend HCQ</text>
+  <!-- proposition cards -->
+  <g transform="translate(60, 130)">
+    <rect width="220" height="74" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+    <text x="14" y="18" font-size="10" font-family="ui-monospace, monospace" fill="#6e7681">P1</text>
+    <text x="14" y="38" font-size="14" font-weight="500" fill="#e6edf3">Sunset was stolen</text>
+    <text x="14" y="58" font-size="11" fill="#8b949e">prior odds 1 : 9</text>
+    <text x="160" y="58" font-size="11" font-family="ui-monospace, monospace" fill="#6e7681">−10 dB</text>
+  </g>
+
+  <g transform="translate(330, 130)">
+    <rect width="220" height="74" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+    <text x="14" y="18" font-size="10" font-family="ui-monospace, monospace" fill="#6e7681">P2</text>
+    <text x="14" y="38" font-size="14" font-weight="500" fill="#e6edf3">Storm was stolen</text>
+    <text x="14" y="58" font-size="11" fill="#8b949e">prior odds 1 : 9</text>
+    <text x="160" y="58" font-size="11" font-family="ui-monospace, monospace" fill="#6e7681">−10 dB</text>
+  </g>
+
+  <!-- entity / witness cards -->
+  <g transform="translate(60, 360)">
+    <rect width="160" height="64" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+    <text x="12" y="18" font-size="10" font-family="ui-monospace, monospace" fill="#6e7681">witness</text>
+    <text x="12" y="36" font-size="13" font-weight="500" fill="#e6edf3">Curator</text>
+    <text x="12" y="54" font-size="10" fill="#8b949e">2 separate claims</text>
+  </g>
+
+  <g transform="translate(245, 360)">
+    <rect width="160" height="64" rx="6" fill="#1c1726" stroke="#c39bd3" stroke-width="1.4"/>
+    <text x="12" y="18" font-size="10" font-family="ui-monospace, monospace" fill="#c39bd3">witness · hyperedge</text>
+    <text x="12" y="36" font-size="13" font-weight="500" fill="#e6edf3">Guard</text>
+    <text x="12" y="54" font-size="10" fill="#c39bd3">one claim · two effects</text>
+  </g>
+
+  <g transform="translate(430, 360)">
+    <rect width="120" height="64" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+    <text x="12" y="18" font-size="10" font-family="ui-monospace, monospace" fill="#6e7681">witness</text>
+    <text x="12" y="36" font-size="13" font-weight="500" fill="#e6edf3">Camera</text>
+    <text x="12" y="54" font-size="10" fill="#8b949e">one claim</text>
+  </g>
+
+  <!-- claim text under entity cards -->
+  <g font-size="11" fill="#8b949e" font-style="italic">
+    <text x="60" y="442">"Sunset is missing"</text>
+    <text x="60" y="458">"Storm is in place"</text>
+    <text x="245" y="442">"Both were there at midnight"</text>
+    <text x="430" y="442">"Movement near Sunset 02:00"</text>
+  </g>
+
+  <!-- edges from witnesses up to propositions -->
+  <!-- Curator → P1 (supports) -->
+  <path d="M 110 360 Q 110 290 110 204" stroke="#62d196" stroke-width="1.4" fill="none" marker-end="url(#arr-sup)" opacity="0.85"/>
+  <text x="118" y="290" font-size="10" font-family="ui-monospace, monospace" fill="#62d196">→ +10 dB</text>
+
+  <!-- Curator → P2 (counters) -->
+  <path d="M 175 360 Q 280 285 410 204" stroke="#fb7185" stroke-width="1.2" fill="none" marker-end="url(#arr-cnt)" opacity="0.7" stroke-dasharray="3 3"/>
+  <text x="265" y="280" font-size="10" font-family="ui-monospace, monospace" fill="#fb7185">⊥ −10 dB</text>
+
+  <!-- Guard → P1 (counters) — HYPEREDGE leg 1 -->
+  <path d="M 295 360 Q 220 290 175 204" stroke="#c39bd3" stroke-width="1.6" fill="none" marker-end="url(#arr-hyp)"/>
+  <text x="195" y="335" font-size="10" font-family="ui-monospace, monospace" fill="#c39bd3">⊥ −6 dB</text>
+
+  <!-- Guard → P2 (counters) — HYPEREDGE leg 2 -->
+  <path d="M 360 360 Q 405 290 460 204" stroke="#c39bd3" stroke-width="1.6" fill="none" marker-end="url(#arr-hyp)"/>
+  <text x="395" y="335" font-size="10" font-family="ui-monospace, monospace" fill="#c39bd3">⊥ −6 dB</text>
+
+  <!-- Camera → P1 (supports) -->
+  <path d="M 470 360 Q 380 285 230 204" stroke="#62d196" stroke-width="1.2" fill="none" marker-end="url(#arr-sup)" opacity="0.85"/>
+  <text x="370" y="320" font-size="10" font-family="ui-monospace, monospace" fill="#62d196">→ +9 dB</text>
+
+  <!-- legend -->
+  <g transform="translate(60, 510)" font-size="11">
+    <rect x="-4" y="-14" width="540" height="74" rx="4" fill="#0f1419" stroke="#1f262e" stroke-width="0.5"/>
+    <text fill="#62d196" y="2">→ supports</text>
+    <text x="100" fill="#fb7185" y="2">⊥ counters</text>
+    <text x="200" fill="#c39bd3" y="2">═ hyperedge: same claim, two propositions</text>
+    <text fill="#8b949e" y="22">An entity is the hyperedge — when one source's single claim is</text>
+    <text fill="#8b949e" y="38">evidence on more than one proposition, that source bridges them.</text>
+  </g>
+
+  <!-- ════════════════════════════════════════════════════════════════ -->
+  <!--  RIGHT PANEL — worked accumulation                               -->
+  <!-- ════════════════════════════════════════════════════════════════ -->
+  <g transform="translate(640, 130)" font-family="ui-monospace, monospace" font-size="12">
+
+    <!-- P1 block -->
+    <text x="0" y="0" font-size="13" font-weight="600" fill="#e6edf3" font-family="ui-sans-serif, sans-serif">
+      P1 — Sunset stolen
+    </text>
+
+    <g transform="translate(0, 24)" fill="#c9d1d9">
+      <text x="0"   y="0">prior odds 1 : 9</text>
+      <text x="380" y="0" text-anchor="end" fill="#6e7681">−10 dB</text>
+
+      <text x="0"   y="22">Curator "Sunset is missing"</text>
+      <text x="180" y="22" fill="#6e7681">lr = 10</text>
+      <text x="380" y="22" text-anchor="end" fill="#62d196">+10 dB</text>
+
+      <text x="0"   y="44">Guard "both there" (hyperedge)</text>
+      <text x="180" y="44" fill="#6e7681">lr = 4</text>
+      <text x="380" y="44" text-anchor="end" fill="#c39bd3">−6 dB</text>
+
+      <text x="0"   y="66">Camera "movement near Sunset"</text>
+      <text x="180" y="66" fill="#6e7681">lr = 8</text>
+      <text x="380" y="66" text-anchor="end" fill="#62d196">+9 dB</text>
+
+      <line x1="0" x2="380" y1="80" y2="80" stroke="#30363d" stroke-width="0.8"/>
+
+      <text x="0"   y="100" fill="#e6edf3" font-weight="600">posterior</text>
+      <text x="180" y="100" fill="#62d196">2 : 1 odds</text>
+      <text x="380" y="100" text-anchor="end" fill="#62d196" font-weight="600">+3 dB &#8594; m = 0.67</text>
     </g>
 
-    <!-- LEFT FOOTER -->
-    <g transform="translate(0, 640)">
-      <line x1="0" x2="600" y1="0" y2="0" stroke="#30363d" stroke-width="1"/>
-      <text x="0" y="22" font-size="12" fill="#8b949e">
-        16 stories &#160;·&#160; 13 sources &#160;·&#160; 12 months
+    <!-- P2 block -->
+    <text x="0" y="170" font-size="13" font-weight="600" fill="#e6edf3" font-family="ui-sans-serif, sans-serif">
+      P2 — Storm stolen
+    </text>
+
+    <g transform="translate(0, 194)" fill="#c9d1d9">
+      <text x="0"   y="0">prior odds 1 : 9</text>
+      <text x="380" y="0" text-anchor="end" fill="#6e7681">−10 dB</text>
+
+      <text x="0"   y="22">Curator "Storm is in place"</text>
+      <text x="180" y="22" fill="#6e7681">lr = 10</text>
+      <text x="380" y="22" text-anchor="end" fill="#fb7185">−10 dB</text>
+
+      <text x="0"   y="44">Guard "both there" (hyperedge)</text>
+      <text x="180" y="44" fill="#6e7681">lr = 4</text>
+      <text x="380" y="44" text-anchor="end" fill="#c39bd3">−6 dB</text>
+
+      <line x1="0" x2="380" y1="58" y2="58" stroke="#30363d" stroke-width="0.8"/>
+
+      <text x="0"   y="78" fill="#e6edf3" font-weight="600">posterior</text>
+      <text x="180" y="78" fill="#fb7185">1 : 400 odds</text>
+      <text x="380" y="78" text-anchor="end" fill="#fb7185" font-weight="600">−26 dB &#8594; m = 0.003</text>
+    </g>
+
+    <!-- callout: the hyperedge appears in BOTH worked stacks -->
+    <g transform="translate(0, 320)">
+      <rect x="-10" y="-16" width="540" height="44" rx="4" fill="#1c1726" stroke="#c39bd3" stroke-width="0.6" opacity="0.85"/>
+      <text x="0" y="2" font-size="11" fill="#c39bd3" font-family="ui-sans-serif, sans-serif">
+        Notice the line "Guard 'both there'  −6 dB" appears in <tspan font-weight="600">both</tspan> stacks.
       </text>
-      <text x="0" y="42" font-size="12" fill="#6e7681">
-        no structure &#160;·&#160; no verdict &#160;·&#160; whichever you saw first wins
+      <text x="0" y="20" font-size="11" fill="#c39bd3" font-family="ui-sans-serif, sans-serif">
+        One claim, two effects. That repetition is the hypergraph showing through the math.
       </text>
     </g>
   </g>
 
-  <!-- ════════════════════════════════════════════════════════════════ -->
-  <!--  RIGHT PANEL — BELLA's belief structure                          -->
-  <!-- ════════════════════════════════════════════════════════════════ -->
-  <g transform="translate(740, 150)">
-
-    <!-- ROOT proposition card -->
-    <g transform="translate(180, 0)">
-      <rect width="280" height="86" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
-      <text x="14" y="22" font-size="11" font-family="ui-monospace, monospace" fill="#6e7681">P1</text>
-      <text x="14" y="42" font-size="14" font-weight="500" fill="#e6edf3">HCQ effective for COVID-19</text>
-      <text x="14" y="64" font-size="11" fill="#8b949e">posterior mass</text>
-      <text x="14" y="78" font-size="20" font-weight="600" font-family="ui-monospace, monospace" fill="#e57373">m = 0.000</text>
-      <text x="200" y="64" font-size="11" fill="#8b949e">voices</text>
-      <text x="200" y="78" font-size="20" font-weight="600" font-family="ui-monospace, monospace" fill="#e6edf3">16</text>
-    </g>
-
-    <!-- branch labels -->
-    <g transform="translate(0, 110)">
-      <text x="60" y="0" font-size="13" font-weight="500" fill="#62d196">→ supports (5)</text>
-      <text x="380" y="0" font-size="13" font-weight="500" fill="#fb7185">⊥ counters (8 + 1 retracted + 2 reversals)</text>
-    </g>
-
-    <!-- branch lines -->
-    <line x1="320" y1="86" x2="120" y2="120" stroke="#62d196" stroke-width="1.2" opacity="0.55"/>
-    <line x1="320" y1="86" x2="500" y2="120" stroke="#fb7185" stroke-width="1.2" opacity="0.55"/>
-
-    <!-- SUPPORTS column (left) -->
-    <g transform="translate(40, 132)" font-size="12">
-      <g transform="translate(0, 0)">
-        <text font-family="ui-monospace, monospace" fill="#62d196" opacity="0.85">→</text>
-        <text x="20" fill="#e6edf3">Raoult small trial</text>
-        <text x="20" y="14" font-size="10" fill="#6e7681">small_trial · lr 3.0</text>
-      </g>
-      <g transform="translate(0, 44)">
-        <text font-family="ui-monospace, monospace" fill="#62d196" opacity="0.85">→</text>
-        <text x="20" fill="#e6edf3">Trump endorsement</text>
-        <text x="20" y="14" font-size="10" fill="#6e7681">amplification · lr 1.5</text>
-      </g>
-      <g transform="translate(0, 88)">
-        <text font-family="ui-monospace, monospace" fill="#62d196" opacity="0.85">→</text>
-        <text x="20" fill="#e6edf3">FDA EUA</text>
-        <text x="20" y="14" font-size="10" fill="#6e7681">regulatory_action · lr 3.0</text>
-      </g>
-      <g transform="translate(0, 132)">
-        <text font-family="ui-monospace, monospace" fill="#62d196" opacity="0.85">→</text>
-        <text x="20" fill="#e6edf3">Zelenko case series</text>
-        <text x="20" y="14" font-size="10" fill="#6e7681">case_series · lr 2.0</text>
-      </g>
-      <g transform="translate(0, 176)">
-        <text font-family="ui-monospace, monospace" fill="#62d196" opacity="0.85">→</text>
-        <text x="20" fill="#e6edf3">Henry Ford observational</text>
-        <text x="20" y="14" font-size="10" fill="#6e7681">observational · lr 4.0</text>
-      </g>
-      <g transform="translate(0, 220)">
-        <text font-family="ui-monospace, monospace" fill="#62d196" opacity="0.85">→</text>
-        <text x="20" fill="#e6edf3">Raoult continued advocacy</text>
-        <text x="20" y="14" font-size="10" fill="#6e7681">advocacy · lr 1.5 (weak)</text>
-      </g>
-    </g>
-
-    <!-- COUNTERS column (right) -->
-    <g transform="translate(360, 132)" font-size="12">
-      <g transform="translate(0, 0)">
-        <text font-family="ui-monospace, monospace" fill="#fb7185" opacity="0.85">⊥</text>
-        <text x="20" fill="#e6edf3">NIH guideline</text>
-        <text x="20" y="14" font-size="10" fill="#6e7681">guideline · lr 6.0</text>
-      </g>
-      <g transform="translate(0, 44)">
-        <text font-family="ui-monospace, monospace" fill="#fb7185" opacity="0.85">⊥</text>
-        <text x="20" fill="#e6edf3">VA observational</text>
-        <text x="20" y="14" font-size="10" fill="#6e7681">observational · lr 5.0</text>
-      </g>
-      <g transform="translate(0, 88)">
-        <text font-family="ui-monospace, monospace" fill="#fb7185" opacity="0.85">⊥</text>
-        <text x="20" fill="#e6edf3">Lancet/Mehra (retracted)</text>
-        <text x="20" y="14" font-size="10" fill="#6e7681">retracted · neutral</text>
-      </g>
-      <g transform="translate(0, 132)">
-        <text font-family="ui-monospace, monospace" fill="#fb7185">⊥</text>
-        <text x="20" fill="#e6edf3" font-weight="500">RECOVERY RCT  ★</text>
-        <text x="20" y="14" font-size="10" fill="#9ca3af">randomized · lr 14.0</text>
-      </g>
-      <g transform="translate(0, 176)">
-        <text font-family="ui-monospace, monospace" fill="#fb7185" opacity="0.85">⊥</text>
-        <text x="20" fill="#e6edf3">FDA revocation</text>
-        <text x="20" y="14" font-size="10" fill="#6e7681">revocation · lr 9.0</text>
-      </g>
-      <g transform="translate(0, 220)">
-        <text font-family="ui-monospace, monospace" fill="#fb7185">⊥</text>
-        <text x="20" fill="#e6edf3" font-weight="500">WHO Solidarity RCT  ★</text>
-        <text x="20" y="14" font-size="10" fill="#9ca3af">randomized · lr 15.0</text>
-      </g>
-      <g transform="translate(0, 264)">
-        <text font-family="ui-monospace, monospace" fill="#fb7185">⊥</text>
-        <text x="20" fill="#e6edf3" font-weight="500">Cavalcanti RCT  ★</text>
-        <text x="20" y="14" font-size="10" fill="#9ca3af">randomized · lr 10.0</text>
-      </g>
-      <g transform="translate(0, 308)">
-        <text font-family="ui-monospace, monospace" fill="#fb7185">⊥</text>
-        <text x="20" fill="#e6edf3" font-weight="500">Cochrane review  ★</text>
-        <text x="20" y="14" font-size="10" fill="#9ca3af">systematic_review · lr 18.0</text>
-      </g>
-    </g>
-
-    <!-- LEGEND -->
-    <g transform="translate(40, 510)" font-size="11" fill="#8b949e">
-      <text x="0" y="0">★ randomized / systematic — strongest evidence weights, modulating m through Jaynes log-likelihood</text>
-    </g>
-
-    <!-- RIGHT FOOTER -->
-    <g transform="translate(0, 540)">
-      <line x1="0" x2="640" y1="0" y2="0" stroke="#30363d" stroke-width="1"/>
-      <text x="0" y="22" font-size="12" fill="#8b949e">
-        same 16 claims &#160;·&#160; assembled by R1–R6 &#160;·&#160; disputes structural (⊥)
-      </text>
-      <text x="0" y="42" font-size="12" fill="#62d196">
-        verdict: m = 0.000 &#160;·&#160; HCQ is not effective &#160;·&#160; visible to anyone with the gene
-      </text>
-    </g>
-  </g>
-
-  <!-- ─── BOTTOM CAPTION ─── -->
-  <g transform="translate(40, 855)">
-    <text font-size="11" fill="#6e7681">
-      Real claims with real likelihood ratios from <tspan font-family="ui-monospace, monospace">replay/cases/hydroxychloroquine/</tspan>.
-      The peak m = 0.77 in late March 2020, before any randomized trial existed, is itself a finding — see JAYNES.md §1.4.
+  <!-- ─── BOTTOM: entanglement ripple (R5 through R6) ─── -->
+  <g transform="translate(40, 640)">
+    <text x="0" y="0" font-size="11" font-weight="600" fill="#8b949e" letter-spacing="0.12em">
+      AND THEN — THE ENTANGLEMENT RIPPLE
+    </text>
+    <text x="0" y="22" font-size="12" fill="#c9d1d9">
+      The Guard's claim conflicts with the Camera. His reputation drops from <tspan fill="#e6edf3" font-family="ui-monospace, monospace">0.50</tspan>
+      to about <tspan fill="#e6edf3" font-family="ui-monospace, monospace">0.40</tspan>.
+      That drop modulates his evidence on <tspan font-style="italic">both</tspan> propositions —
+      his counter on P2 weakens to <tspan fill="#e6edf3" font-family="ui-monospace, monospace">−5.7 dB</tspan>
+      even though no new evidence about Storm arrived.
+    </text>
+    <text x="0" y="42" font-size="12" fill="#8b949e">
+      That ripple through one entity is what "hypergraph" actually buys.
+      One witness, one updated reputation, two propositions shifted.
+      &#160;See SPEC.md §7.1 (Entanglement) and §8 (Entities as R5).
     </text>
   </g>
+
+  <!-- ─── ATTRIBUTION ─── -->
+  <text x="40" y="730" font-size="10" fill="#6e7681">
+    Decibel evidence per Jaynes Ch. 4 · 10 dB = 10:1 odds · Bayesian update by addition · gallery example crafted to fit one image.
+  </text>
 </svg>
