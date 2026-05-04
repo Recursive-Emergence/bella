@@ -1,5 +1,23 @@
 # BELLA Changelog
 
+## Unreleased — 2026-05-03
+
+### Theory / agenda
+- `CHALLENGES.md` added — consolidates open theory and engineering
+  work surfaced by the empirical exercises so far. Framed by the
+  load-bearing architectural reframe: at world-model scale the gene
+  is a *recipe* (not a snapshot) and the stored graph is a *cache*
+  (not the canonical state). Eight theory items (proposition/claim
+  collapse, gene grammar limits, hypergraph as primitive, voice
+  cross-source dependence, locality, identity, R5 multi-cycle
+  convergence, multiple-hypothesis tracking), five engineering items
+  (identity-resolution, fractal gene, relevance scorer, async heal
+  scheduler, provenance graph), two cross-cutting items (cross-field
+  MERGE, modality table data-driven), four empirical questions
+  (cliff experiment, HCQ cross-source rerun, full-system path-
+  invariance, functional equivalence at scale), and a sequencing
+  plan (clusters A–E).
+
 ## Unreleased — 2026-04-28
 
 ### Theory

@@ -86,6 +86,7 @@ Both produce correct epistemic structure: disputes identified, voices accumulate
 SPEC.md       Formal specification (six rules, gene, invariants)
 VISION.md     Theoretical grounding — Jaynes, Gödel, consciousness
 JAYNES.md     What BELLA inherits from / extends / specializes in Jaynes
+CHALLENGES.md Open work for SPEC v0.2 — theory and engineering agenda
 WHY.md        The epistemic crisis BELLA addresses
 MEMORY.md     BELLA applied to LLM agent memory
 EXAMPLES.md   Domain-agnostic case studies
