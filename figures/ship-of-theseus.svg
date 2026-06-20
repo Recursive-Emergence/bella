@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 1000 660" xmlns="http://www.w3.org/2000/svg"
+     font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, sans-serif">
+  <defs>
+    <symbol id="boat" viewBox="0 0 48 34">
+      <path d="M3,18 L45,18 L38,30 L10,30 Z" fill="currentColor"/>
+      <line x1="24" y1="18" x2="24" y2="5" stroke="#c9d1d9" stroke-width="1.2"/>
+      <path d="M24,6 L24,16 L36,16 Z" fill="#c9d1d9" opacity="0.5"/>
+    </symbol>
+    <marker id="cont" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#62d196"/>
+    </marker>
+  </defs>
+
+  <rect width="1000" height="660" fill="#0d1117"/>
+
+  <text x="40" y="40" font-size="21" font-weight="600" fill="#e6edf3" letter-spacing="-0.01em">
+    The Ship of Theseus — one puzzle, three relations
+  </text>
+  <text x="40" y="62" font-size="13" fill="#8b949e">
+    The deadlock dissolves once "same" is split into continuity, connectedness, and authority.
+  </text>
+
+  <!-- ── PLUTARCH ── -->
+  <text x="40" y="102" font-size="11" font-weight="600" fill="#8b949e" letter-spacing="0.12em">
+    PLUTARCH · REPLACE EACH PLANK → CONTINUOUS BLOCK-ADVANCE
+  </text>
+
+  <use href="#boat" x="70"  y="120" width="48" height="34" color="#d2a36b"/>
+  <use href="#boat" x="280" y="120" width="48" height="34" color="#9cbf76"/>
+  <use href="#boat" x="490" y="120" width="48" height="34" color="#7ec98a"/>
+  <use href="#boat" x="700" y="120" width="48" height="34" color="#62d196"/>
+
+  <path d="M122 137 L276 137" stroke="#62d196" stroke-width="1.4" marker-end="url(#cont)"/>
+  <path d="M332 137 L486 137" stroke="#62d196" stroke-width="1.4" marker-end="url(#cont)"/>
+  <path d="M542 137 L696 137" stroke="#62d196" stroke-width="1.4" marker-end="url(#cont)"/>
+
+  <g font-size="10" font-family="ui-monospace, monospace" fill="#6e7681">
+    <text x="70"  y="180">block₀ · all-original</text>
+    <text x="280" y="180">block₁</text>
+    <text x="490" y="180">block₂</text>
+    <text x="700" y="180">block₃ · all-new</text>
+  </g>
+
+  <text x="70" y="208" font-size="12.5" fill="#62d196">continuity — block₀ reachable through the chain  ✓  same ship</text>
+  <text x="70" y="227" font-size="12.5" fill="#fb7185">connectedness — original planks still present → 0  ✗  not the same ship</text>
+  <text x="70" y="246" font-size="12" fill="#8b949e">both true — they are different relations (§1.2). "Same?" feels paradoxical only if you fuse them.</text>
+
+  <line x1="40" y1="266" x2="960" y2="266" stroke="#30363d" stroke-width="1"/>
+
+  <!-- ── HOBBES ── -->
+  <text x="40" y="298" font-size="11" font-weight="600" fill="#8b949e" letter-spacing="0.12em">
+    HOBBES · KEEP THE OLD PLANKS, REBUILD A SHIP → FISSION (§2)
+  </text>
+
+  <!-- ancestor -->
+  <use href="#boat" x="60" y="372" width="48" height="34" color="#d2a36b"/>
+  <text x="42" y="422" font-size="10" font-family="ui-monospace, monospace" fill="#d2a36b">block₀ · the original</text>
+
+  <!-- branch A: continuity-heir -->
+  <text x="300" y="306" font-size="12" fill="#62d196">branch A — continuity-heir · matter fully replaced · ½ R = continuity</text>
+  <use href="#boat" x="300" y="318" width="48" height="34" color="#9cbf76"/>
+  <use href="#boat" x="470" y="318" width="48" height="34" color="#7ec98a"/>
+  <use href="#boat" x="640" y="318" width="48" height="34" color="#62d196"/>
+  <path d="M108 378 Q 200 345 300 338" stroke="#62d196" stroke-width="1.4" fill="none" marker-end="url(#cont)"/>
+  <path d="M352 335 L466 335" stroke="#62d196" stroke-width="1.4" marker-end="url(#cont)"/>
+  <path d="M522 335 L636 335" stroke="#62d196" stroke-width="1.4" marker-end="url(#cont)"/>
+
+  <!-- branch B: connectedness-heir, with a continuity gap -->
+  <use href="#boat" x="300" y="452" width="48" height="34" color="#d2a36b"/>
+  <path d="M108 400 Q 200 440 296 466" stroke="#6e7681" stroke-width="1.4" fill="none" stroke-dasharray="4 4"/>
+  <text x="150" y="452" font-size="10.5" fill="#fb7185">continuity gap — planks idle, not a ship</text>
+  <text x="360" y="474" font-size="12" fill="#d2a36b">branch B — connectedness-heir · the original planks · ½ R = connectedness</text>
+
+  <!-- resolution band -->
+  <rect x="40" y="512" width="920" height="116" rx="6" fill="#0f1419" stroke="#1f262e" stroke-width="0.8"/>
+  <text x="58" y="540" font-size="13" fill="#e6edf3">
+    <tspan font-weight="600">Which is the real Theseus?</tspan>  → an empty question (§1.4). Neither is block₀; each holds one half of Relation R.
+  </text>
+  <text x="58" y="566" font-size="13" fill="#58a6ff">
+    Athens grants "is-the-Theseus" by decree → a speaks-for delegation (§5), not a metaphysical fact.
+  </text>
+  <text x="58" y="592" font-size="12.5" fill="#8b949e">
+    The 2,000-year deadlock = continuity (A) + connectedness (B) + authority (whoever is designated), crammed into one word.
+  </text>
+  <text x="58" y="614" font-size="12" fill="#c9d1d9">AI: A = continuous fine-tuning · B = checkpoint-restore-while-live. "Which is the agent?" is empty; "which holds the key?" is delegated.</text>
+</svg>

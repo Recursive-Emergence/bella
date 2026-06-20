@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 1000 440" xmlns="http://www.w3.org/2000/svg"
+     font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, sans-serif">
+  <defs>
+    <marker id="next" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6e7681"/>
+    </marker>
+  </defs>
+
+  <rect width="1000" height="440" fill="#0d1117"/>
+
+  <text x="40" y="40" font-size="21" font-weight="600" fill="#e6edf3" letter-spacing="-0.01em">
+    Relation R, split — connectedness vs. continuity
+  </text>
+  <text x="40" y="62" font-size="13" fill="#8b949e">
+    Parfit's two components map to two operations on the same hash chain. The puzzle is fusing them.
+  </text>
+
+  <!-- continuity arc (above) -->
+  <path d="M883 188 Q 493 96 103 188" stroke="#62d196" stroke-width="1.6" fill="none"/>
+  <text x="493" y="118" font-size="12.5" fill="#62d196" text-anchor="middle">
+    continuity = common ancestor reachable · transitive · yes/no  →  b₀ is reachable from b₆  ✓
+  </text>
+
+  <!-- chain blocks -->
+  <g>
+    <g transform="translate(70,190)"><rect width="66" height="56" rx="6" fill="#161b22" stroke="#30363d"/><text x="33" y="24" font-size="13" font-weight="600" fill="#e6edf3" text-anchor="middle">b₀</text><text x="33" y="42" font-size="9.5" font-family="ui-monospace,monospace" fill="#6e7681" text-anchor="middle">9f3a…</text></g>
+    <g transform="translate(200,190)"><rect width="66" height="56" rx="6" fill="#161b22" stroke="#30363d"/><text x="33" y="24" font-size="13" font-weight="600" fill="#e6edf3" text-anchor="middle">b₁</text><text x="33" y="42" font-size="9.5" font-family="ui-monospace,monospace" fill="#6e7681" text-anchor="middle">c7d1…</text></g>
+    <g transform="translate(330,190)"><rect width="66" height="56" rx="6" fill="#161b22" stroke="#30363d"/><text x="33" y="24" font-size="13" font-weight="600" fill="#e6edf3" text-anchor="middle">b₂</text><text x="33" y="42" font-size="9.5" font-family="ui-monospace,monospace" fill="#6e7681" text-anchor="middle">5b0e…</text></g>
+    <g transform="translate(460,190)"><rect width="66" height="56" rx="6" fill="#161b22" stroke="#30363d"/><text x="33" y="24" font-size="13" font-weight="600" fill="#e6edf3" text-anchor="middle">b₃</text><text x="33" y="42" font-size="9.5" font-family="ui-monospace,monospace" fill="#6e7681" text-anchor="middle">e2a8…</text></g>
+    <g transform="translate(590,190)"><rect width="66" height="56" rx="6" fill="#161b22" stroke="#30363d"/><text x="33" y="24" font-size="13" font-weight="600" fill="#e6edf3" text-anchor="middle">b₄</text><text x="33" y="42" font-size="9.5" font-family="ui-monospace,monospace" fill="#6e7681" text-anchor="middle">71fc…</text></g>
+    <g transform="translate(720,190)"><rect width="66" height="56" rx="6" fill="#161b22" stroke="#30363d"/><text x="33" y="24" font-size="13" font-weight="600" fill="#e6edf3" text-anchor="middle">b₅</text><text x="33" y="42" font-size="9.5" font-family="ui-monospace,monospace" fill="#6e7681" text-anchor="middle">3ad9…</text></g>
+    <g transform="translate(850,190)"><rect width="66" height="56" rx="6" fill="#16241c" stroke="#62d196" stroke-width="1.4"/><text x="33" y="24" font-size="13" font-weight="600" fill="#e6edf3" text-anchor="middle">b₆</text><text x="33" y="42" font-size="9.5" font-family="ui-monospace,monospace" fill="#62d196" text-anchor="middle">leaf</text></g>
+  </g>
+
+  <!-- append arrows -->
+  <g>
+    <path d="M136 218 L200 218" stroke="#6e7681" stroke-width="1.2" marker-end="url(#next)"/>
+    <path d="M266 218 L330 218" stroke="#6e7681" stroke-width="1.2" marker-end="url(#next)"/>
+    <path d="M396 218 L460 218" stroke="#6e7681" stroke-width="1.2" marker-end="url(#next)"/>
+    <path d="M526 218 L590 218" stroke="#6e7681" stroke-width="1.2" marker-end="url(#next)"/>
+    <path d="M656 218 L720 218" stroke="#6e7681" stroke-width="1.2" marker-end="url(#next)"/>
+    <path d="M786 218 L850 218" stroke="#6e7681" stroke-width="1.2" marker-end="url(#next)"/>
+  </g>
+
+  <text x="103" y="278" font-size="10" font-family="ui-monospace,monospace" fill="#8b949e" text-anchor="middle">founding</text>
+  <text x="883" y="170" font-size="10" fill="#62d196" text-anchor="middle">advances every thought</text>
+
+  <!-- connectedness arcs (below), fading with distance from leaf -->
+  <path d="M883 248 Q 818 300 753 248" stroke="#62d196" stroke-width="3"   fill="none" opacity="1.0"/>
+  <path d="M883 248 Q 753 330 623 248" stroke="#62d196" stroke-width="2.2" fill="none" opacity="0.6"/>
+  <path d="M883 248 Q 688 360 493 248" stroke="#62d196" stroke-width="1.4" fill="none" opacity="0.35"/>
+  <path d="M883 248 Q 623 388 363 248" stroke="#62d196" stroke-width="1"   fill="none" opacity="0.18"/>
+
+  <text x="300" y="372" font-size="12" fill="#62d196">connectedness = current-state overlap · a degree · non-transitive · fades with distance</text>
+
+  <rect x="40" y="392" width="920" height="34" rx="6" fill="#0f1419" stroke="#1f262e" stroke-width="0.8"/>
+  <text x="58" y="414" font-size="12.5" font-family="ui-monospace,monospace" fill="#c9d1d9">
+    r_connect(bᵢ, bⱼ) = |shared prefix| / |union of the two chains|        kin?  ⇔  a common ancestor exists.
+  </text>
+</svg>

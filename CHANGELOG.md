@@ -1,5 +1,104 @@
 # BELLA Changelog
 
+## Unreleased — 2026-05-04
+
+### Engine / Architecture
+- `replay/streaming/` package added — multi-proposition gene growth via
+  per-claim LLM action selection (gpt-4o-mini, temperature 0) +
+  text-embedding-3-small for similarity. Pipeline:
+  embed → field projection (T5 locality) → top-k within-field gene
+  fragment → LLM emits one structured action {ROOT/CONFIRM/AMEND/
+  CHILD/COUNTER} with required `i1_check` audit → mutate gene → persist
+  events.jsonl. Per-run cost: ~$0.02 for ~50 claims through gpt-4o-mini
+  (small-model cost holds because the expensive cognition is split:
+  embeddings handle recall, the cheap LLM handles per-claim decisions).
+- Field-aware projection: each ROOT seeds a Field with a running
+  embedding centroid; new claims route to best-cosine field if
+  `cosine > θ_field` (default 0.30), else fall through to a field
+  overview. Persisted in events.jsonl as `projection.mode` + `best_field`
+  + `best_field_cos` so every routing decision is auditable.
+- R3 EMERGE generalized to two scopes — field-level (existing) and
+  within-field (new). The within-field variant catches duplicate
+  beliefs that landed in one field as separate children, the
+  K-prediction / H-report convergence pattern from the gene exercise.
+  ⊥-guard added per SPEC I2: pairs already in an explicit denial
+  relation are excluded from merge candidates.
+- REROOT operator added — the dual of MERGE at field scope. When a
+  field's centroid drifts from its current structural root anchor,
+  REROOT promotes a centroid-nearer member to root and demotes the
+  current root to a CHILD with kernel-chosen relation. Field handle
+  (`Field.id`) decoupled from current structural root (`Field.root_id`)
+  so re-rooting preserves stable identity for events/projections.
+
+### Theory
+- The **simple operator at any level** family — articulated as the
+  recursive operator pattern that connects R3 EMERGE across scopes.
+  Three structural operators (MERGE, REROOT, SPLIT) + one self-
+  referential R4 operator (Ψ-anomaly) so far. Same operator shape —
+  compute pattern over items at a level, propose mutation — applied at
+  claim-, proposition-, field-, theme-, worldview- levels. SPEC v0.2
+  should write `EMERGE_N: items at level N → items at level N` once
+  rather than per-level.
+- **Ψ-anomaly** is the first R4 (SELF-REFER) operator implemented as
+  code. Flags 1v high-mass propositions whose topic area is
+  well-covered by other voices that did NOT corroborate them — exactly
+  the pattern the hand-built analysis catches manually
+  ("anomalous absence of corroboration given the magnitude").
+  Demonstrated on the 8-voice Hormuz case: the Supreme Leader killing
+  claim (NYT-only, m=0.86, 5 other voices touch the topic without
+  confirming) was correctly surfaced by Ψ-anomaly, matching the hand-
+  built analysis's "1v claim of high magnitude lacks corroboration"
+  flag.
+
+### Empirical
+- `replay/streaming/cliff.py` (v1) and `cliff_v2.py` (v2) — the cliff
+  experiment as falsifiable test of the gene-as-recipe / KB-as-cache
+  reframing. v1 preserved the central proposition's field and pruned
+  others; m saturated at 0.998 across all pruning levels (tests
+  robustness, not regeneration). v2 deleted the central field too;
+  the central thesis re-emerged identically (cos=1.000, m=0.819) at
+  every pruning level k+1 ∈ {1, 3, 5, 7, 9} on Hormuz. **Recipe
+  hypothesis empirically confirmed at this scale, for explicit
+  single-source-anchored central theses, under up to 55% adjacent-
+  field pruning.** Voice-multiplicity reconstruction failed (|V|
+  dropped 2 → 1) — exactly the T6 (identity primitive) gap.
+- `replay/streaming/shuffle_streaming.py` — order-invariance test
+  for the streaming pipeline. On Hormuz: surface metrics (n_props,
+  n_roots, max_m) tightly stable across 6 orderings (max_m stdev
+  0.004); belief-identity convergence partial (top-3 by m matches
+  canonical in 2/5 shuffled runs at cosine > 0.85). The streaming
+  calculus is **mass-invariant** but **identity-only-partially-
+  invariant** under ordering — exactly what T6 + T2 predict.
+- `replay/cases/hormuz/` — eight-voice live-event case built up
+  incrementally: W (partisan WeChat), G (Gardner AFR voter
+  reporting), Dyer (syndicated column), T_D (Thompson/Douthat
+  podcast), K (Krugman op-ed), H (Hersh insider/officer), S (Smolar
+  Le Monde), Kanno_Youngs (NYT mainstream record). 69 claims, 13+
+  distinct sources. Order-invariance Λ spread 0.67% under 30 perms
+  on the mechanical layer.
+
+### Discovered
+- **First-mover root anomaly** — non-deterministic LLM choice on
+  early claims can lock low-credibility partisan claims as field
+  anchors. Subsequent high-credibility claims get routed in by
+  cosine and amend the partisan root, producing semantically
+  incoherent field labels. Anomaly intermittent across runs.
+  REROOT operator addresses it; SPLIT (not yet built) would address
+  the related field-overgrowth pattern (one field accumulating
+  semantically heterogeneous children).
+- **The hand-built vs streaming gap** — comparing a fully hand-
+  reasoned BELLA mapping (8th voice essay walking through Kanno-
+  Youngs as a 1v anomaly carrier) against the streaming runner's
+  output revealed: streaming + R3 EMERGE accumulates mass and
+  collapses duplicates correctly at the local level, but does not
+  perform R4-flavored meta-pattern moves (anomaly-flag, blindspot-
+  detect, frame-expansion-detect, cross-field synthesis). The
+  hand-built analysis was doing R4 implicitly across the whole
+  gene state. Adding Ψ-anomaly as the first R4 operator closes one
+  specific gap (anomaly-flag); two more — Ψ-blindspot and
+  Ψ-synthesis — surfaced as natural next operators of the same
+  recursive shape.
+
 ## Unreleased — 2026-05-03
 
 ### Theory / agenda

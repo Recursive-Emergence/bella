@@ -61,6 +61,47 @@ What this changes architecturally:
 Everything below serves this reframe.
 
 
+## Discovered: the operator-family architecture
+
+The 2026-05-04 streaming-runner experiments surfaced a structural insight
+that wasn't visible from the SPEC alone: **R3 EMERGE is not one rule but
+a *type signature* for a family of rules instantiated at every
+abstraction level**. The kernel's structural mutations all follow the
+same recursive shape — compute pattern over items at one level, propose
+mutation, recurse — and the same operator can apply to claims,
+propositions, fields, themes, and worldviews.
+
+The operator family:
+
+| Operator | What it does | Dual / Sibling |
+|---|---|---|
+| **MERGE** | collapse same-belief items into one canonical | dual of SPLIT |
+| **REROOT** | relabel a field whose anchor has drifted from its centroid | dual of MERGE |
+| **SPLIT** | separate items that landed in one field but have distinct sub-centroids | dual of MERGE |
+| **Ψ-anomaly** | flag 1v high-mass props whose topic is well-covered by other voices that did not corroborate | R4 self-referential |
+| **Ψ-blindspot** *(open)* | inventory voice/method/entity coverage; surface dimensions absent | R4 self-referential |
+| **Ψ-synthesis** *(open)* | propose multi-parent edges between cross-field props with high cosine | R4 self-referential, addresses T2 |
+
+What makes this architecture-defining: **the same operator definition
+applies at every level** — claims → propositions → fields → themes
+→ worldviews. SPEC v0.2 should write `OPERATOR_N: items at level N → items at level N`
+once with level as a parameter, rather than per-level.
+
+The hand-built BELLA analyses people produce in conversation are doing
+R4 implicitly (anomaly-flag, blindspot-detect, frame-expansion-detect,
+cross-field synthesis). The streaming runner's per-claim operators do
+R1 + R3 well but cannot reach the hand-built analysis's quality without
+explicit R4 operators. Ψ-anomaly is the first R4 implementation;
+Ψ-blindspot and Ψ-synthesis are spec'd but not built.
+
+The "first-mover root anomaly" — a low-credibility early claim
+becoming a field anchor that later high-credibility claims get amended
+under — is what motivated REROOT. It surfaced empirically on the
+Hormuz case during streaming runs and is non-deterministic across
+seeds (different LLM choices on early claims produce or don't produce
+the gravity-well pattern).
+
+
 ## Part I — Theory Challenges
 
 ### T1. Proposition vs Claim Distinction Collapses When |V|=1
